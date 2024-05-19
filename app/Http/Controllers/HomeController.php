@@ -9,8 +9,8 @@ class HomeController extends Controller
 {
     public function index()
     {
-        // Fetch all issues from the database
-        $issues = Issue::all();
+        // Fetch only the visible issues
+        $issues = Issue::where('visibility', 1)->get();
 
         // Return the view with the issues data
         return view('home', compact('issues'));
