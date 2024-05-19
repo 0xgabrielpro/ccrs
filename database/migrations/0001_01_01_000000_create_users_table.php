@@ -17,6 +17,11 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->enum('role', ['citizen', 'leader', 'admin']); // Add role field
+            $table->string('country')->nullable();
+            $table->string('region')->nullable();
+            $table->string('ward')->nullable();
+            $table->string('street')->nullable();
             $table->rememberToken();
             $table->foreignId('current_team_id')->nullable();
             $table->string('profile_photo_path', 2048)->nullable();

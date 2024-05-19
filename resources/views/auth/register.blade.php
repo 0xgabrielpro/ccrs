@@ -14,6 +14,26 @@
                 <x-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" />
             </div>
 
+            <div>
+                <x-label for="country" value="{{ __('Country') }}" />
+                <x-input id="country" class="block mt-1 w-full" type="text" name="country" :value="old('country')" required autocomplete="country" />
+            </div>
+
+            <div>
+                <x-label for="region" value="{{ __('Region') }}" />
+                <x-input id="region" class="block mt-1 w-full" type="text" name="region" :value="old('region')" required autocomplete="country" />
+            </div>
+
+            <div>
+                <x-label for="ward" value="{{ __('Ward') }}" />
+                <x-input id="ward" class="block mt-1 w-full" type="text" name="ward" :value="old('ward')" required autocomplete="country" />
+            </div>
+
+            <div>
+                <x-label for="street" value="{{ __('Street') }}" />
+                <x-input id="street" class="block mt-1 w-full" type="text" name="street" :value="old('street')" required autocomplete="country" />
+            </div>
+
             <div class="mt-4">
                 <x-label for="email" value="{{ __('Email') }}" />
                 <x-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autocomplete="username" />

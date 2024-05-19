@@ -31,6 +31,11 @@ class CreateNewUser implements CreatesNewUsers
         return DB::transaction(function () use ($input) {
             return tap(User::create([
                 'name' => $input['name'],
+                'country' => $input['country'],
+                'region' => $input['region'],
+                'ward' => $input['ward'],
+                'street' => $input['street'],
+                'role' => 'citizen',
                 'email' => $input['email'],
                 'password' => Hash::make($input['password']),
             ]), function (User $user) {
