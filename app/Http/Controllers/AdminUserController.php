@@ -34,7 +34,7 @@ class AdminUserController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8|confirmed',
+            'password' => 'required|string|confirmed',
             'role' => 'required|in:citizen,leader,admin',
             'country' => 'nullable|string|max:255',
             'region' => 'nullable|string|max:255',
@@ -43,6 +43,7 @@ class AdminUserController extends Controller
         ]);
 
         if ($validator->fails()) {
+            // echo "fail";
             return redirect()->back()->withErrors($validator)->withInput();
         }
 

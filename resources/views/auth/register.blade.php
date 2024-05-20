@@ -16,22 +16,31 @@
 
             <div>
                 <x-label for="country" value="{{ __('Country') }}" />
-                <x-input id="country" class="block mt-1 w-full" type="text" name="country" :value="old('country')" required autocomplete="country" />
+                <select id="country" name="country" class="block mt-1 w-full form-select" required autocomplete="country">
+                    <option value="Tanzania" {{ old('country', 'Tanzania') == 'Tanzania' ? 'selected' : '' }}>Tanzania</option>
+                </select>
             </div>
+            
 
             <div>
                 <x-label for="region" value="{{ __('Region') }}" />
-                <x-input id="region" class="block mt-1 w-full" type="text" name="region" :value="old('region')" required autocomplete="country" />
+                <select id="region" name="region" class="block mt-1 w-full form-select" required autocomplete="region">
+                    <option value="Arusha" {{ old('region', 'Arusha') == 'Arusha' ? 'selected' : '' }}>Arusha</option>
+                </select>
             </div>
 
             <div>
                 <x-label for="ward" value="{{ __('Ward') }}" />
-                <x-input id="ward" class="block mt-1 w-full" type="text" name="ward" :value="old('ward')" required autocomplete="country" />
+                <select id="ward" name="ward" class="block mt-1 w-full form-select" required autocomplete="ward">
+                    <option value="Muriet" {{ old('ward', 'Muriet') == 'Muriet' ? 'selected' : '' }}>Muriet</option>
+                </select>
             </div>
 
             <div>
                 <x-label for="street" value="{{ __('Street') }}" />
-                <x-input id="street" class="block mt-1 w-full" type="text" name="street" :value="old('street')" required autocomplete="country" />
+                <select id="street" name="street" class="block mt-1 w-full form-select" required autocomplete="ward">
+                    <option value="Muriet" {{ old('street', 'Muriet') == 'Muriet' ? 'selected' : '' }}>Muriet</option>
+                </select>
             </div>
 
             <div class="mt-4">
