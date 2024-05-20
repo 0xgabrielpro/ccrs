@@ -5,7 +5,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\AdminUserController;
 
-Route::get('/', [HomeController::class, 'index'])->name('home');
+
 
 Route::get('/welcome', function (){
     return view('welcome');
@@ -16,9 +16,7 @@ Route::middleware([
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
+    Route::get('/', [HomeController::class, 'index'])->name('home');
 });
 
 Route::middleware(['auth:sanctum', 'verified'])->get('/issues', function () {
@@ -28,5 +26,16 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/issues', function () {
 
 Route::group(['middleware' => 'admin'], function () {
     Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
-    Route::resource('/admin/users', AdminUserController::class);
+    Route::get('/admin/users/index', [AdminUserController::class, 'index'])->name('admin.users.index');
+    Route::get('/admin/users/{user}', [AdminUserController::class, 'show'])->name('admin.users.show');
+    Route::get('/admin/users/{user}/showEditForm', [AdminUserController::class, 'showEditForm'])->name('admin.users.showEditForm');
+    Route::post('/admin/users/create', [AdminUserController::class, 'create'])->name('admin.users.create');
+    Route::put('/admin/users/{user}/edit', [AdminUserController::class, 'edit'])->name('admin.users.edit');
+    Route::delete('/admin/users/{user}', [AdminUserController::class, 'destroy'])->name('admin.users.destroy');
+
 });
+
+
+// Route::middleware(['auth', 'can:manage-users'])->group(function () {
+//     Route::resource('admin/users', AdminUserController::class);
+// });

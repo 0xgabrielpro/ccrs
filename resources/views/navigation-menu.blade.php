@@ -5,19 +5,19 @@
             <div class="flex">
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
-                    <a href="{{ route('dashboard') }}">
+                    <a href="{{ route('home') }}">
                         <x-application-mark class="block h-9 w-auto" />
                     </a>
                 </div>
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
-                        {{ __('Dashboard') }}
+                    <x-nav-link href="{{ route('home') }}" :active="request()->routeIs('home')">
+                        {{ __('Home') }}
                     </x-nav-link>
                     @auth
                         @if (Auth::user()->role == 'admin')
-                            <x-nav-link href="{{ route('admin.dashboard') }}" :active="request()->routeIs('admin.*')">
+                            <x-nav-link href="{{ route('admin.users.index') }}" :active="request()->routeIs('admin.users.*')">
                                 {{ __('Users') }}
                             </x-nav-link>
                         @else
@@ -32,7 +32,7 @@
             <div class="hidden sm:flex sm:items-center sm:ms-6">
                 @auth
                     <!-- Teams Dropdown -->
-                    @if (Laravel\Jetstream\Jetstream::hasTeamFeatures())
+                    {{-- @if (Laravel\Jetstream\Jetstream::hasTeamFeatures())
                         <div class="ms-3 relative">
                             <x-dropdown align="right" width="60">
                                 <x-slot name="trigger">
@@ -81,7 +81,7 @@
                                 </x-slot>
                             </x-dropdown>
                         </div>
-                    @endif
+                    @endif --}}
 
                     <!-- Settings Dropdown -->
                     <div class="ms-3 relative">
@@ -158,10 +158,10 @@
     <!-- Responsive Navigation Menu -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
-            <a href="{{ route('dashboard') }}" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">{{ __('Dashboard') }}</a>
+            <a href="{{ route('home') }}" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">{{ __('Home') }}</a>
             @auth
                 @if (Auth::user()->role == 'admin')
-                    <a href="{{ route('admin.dashboard') }}" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">{{ __('Users') }}</a>
+                    <a href="{{ route('admin.users.index') }}" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">{{ __('Users') }}</a>
                 @else
                     <a href="{{ route('issues') }}" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">{{ __('My Issues') }}</a>
                 @endif
@@ -201,7 +201,7 @@
                     </form>
 
                     <!-- Team Management -->
-                    @if (Laravel\Jetstream\Jetstream::hasTeamFeatures())
+                    {{-- @if (Laravel\Jetstream\Jetstream::hasTeamFeatures())
                         <div class="border-t border-gray-200 dark:border-gray-600"></div>
 
                         <div class="block px-4 py-2 text-xs text-gray-400">
@@ -213,7 +213,7 @@
 
                         @can('create', Laravel\Jetstream\Jetstream::newTeamModel())
                             <a href="{{ route('teams.create') }}" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">{{ __('Create New Team') }}</a>
-                        @endcan
+                        @endcan 
 
                         <div class="border-t border-gray-200 dark:border-gray-600"></div>
 
@@ -223,8 +223,8 @@
 
                         @foreach (Auth::user()->allTeams() as $team)
                             <x-switchable-team :team="$team" />
-                        @endforeach
-                    @endif
+                        @endforeach 
+                    @endif --}}
                 </div>
             @else
                 <div class="flex items-center space-x-4 ms-3 relative">
