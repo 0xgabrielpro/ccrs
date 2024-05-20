@@ -17,9 +17,27 @@ class UsersTableSeeder extends Seeder
      */
     public function run()
     {
+
         $faker = Faker::create();
 
-        foreach (range(1, 50) as $index) {
+        User::create([
+            'name' => 'Admin',
+            'email' => 'admin@gabrielpro.nl',
+            'email_verified_at' => now(),
+            'password' => Hash::make('password'),
+            'role' => 'admin',
+            'country' => $faker->country,
+            'region' => $faker->state,
+            'ward' => $faker->city,
+            'street' => $faker->streetAddress,
+            'remember_token' => Str::random(10),
+            'current_team_id' => null, // Adjust as needed
+            'profile_photo_path' => $faker->imageUrl(400, 400, 'people', true, 'Faker'), // Optional
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        foreach (range(1, 20) as $index) {
             User::create([
                 'name' => $faker->name,
                 'email' => $faker->unique()->safeEmail,
