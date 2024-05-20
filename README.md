@@ -1,3 +1,3 @@
 # CCRS
 
-Citizen complaint reporting
+Citizen Complaint Reporting System
