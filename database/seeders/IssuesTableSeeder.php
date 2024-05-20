@@ -25,7 +25,7 @@ class IssuesTableSeeder extends Seeder
         }
 
         foreach ($users as $user) {
-            for ($i = 0; $i < 10; $i++) {
+            for ($i = 0; $i < 4; $i++) {
                 Issue::create([
                     'user_id' => $user->id,
                     'title' => $faker->sentence,
