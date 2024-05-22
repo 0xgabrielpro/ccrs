@@ -43,7 +43,6 @@ class AdminUserController extends Controller
         ]);
 
         if ($validator->fails()) {
-            // echo "fail";
             return redirect()->back()->withErrors($validator)->withInput();
         }
 

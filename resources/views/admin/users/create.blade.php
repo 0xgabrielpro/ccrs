@@ -25,8 +25,8 @@
                         <input type="password" id="password" name="password" value="" class="form-input mt-1 block w-full">
                     </div>
                     <div class="mb-4">
-                        <label for="password_confirmation" class="block text-gray-600 font-semibold">Password</label>
-                        <input type="password" id="password_confirmation" name="password" value="" class="form-input mt-1 block w-full">
+                        <label for="password_confirmation" class="block text-gray-600 font-semibold">Confirm Password</label>
+                        <input type="password" id="password_confirmation" name="password_confirmation" value="" class="form-input mt-1 block w-full">
                     </div>
                     <div class="mb-4">
                         <label for="role" class="block text-gray-600 font-semibold">Role</label>
