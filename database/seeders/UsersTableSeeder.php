@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Faker\Factory as Faker;
 use App\Models\User;
+use App\Models\Leader; 
 
 class UsersTableSeeder extends Seeder
 {
@@ -17,9 +18,9 @@ class UsersTableSeeder extends Seeder
      */
     public function run()
     {
-
         $faker = Faker::create();
 
+        // Create an admin user
         User::create([
             'name' => 'Admin',
             'email' => 'admin@gabrielpro.nl',
@@ -31,14 +32,16 @@ class UsersTableSeeder extends Seeder
             'ward' => $faker->city,
             'street' => $faker->streetAddress,
             'remember_token' => Str::random(10),
-            'current_team_id' => null, // Adjust as needed
-            'profile_photo_path' => $faker->imageUrl(400, 400, 'people', true, 'Faker'), // Optional
+            'current_team_id' => null,
+            'profile_photo_path' => $faker->imageUrl(400, 400, 'people', true, 'Faker'),
             'created_at' => now(),
             'updated_at' => now(),
         ]);
 
+        $leaders = Leader::all();
+
         foreach (range(1, 20) as $index) {
-            User::create([
+            $user = User::create([
                 'name' => $faker->name,
                 'email' => $faker->unique()->safeEmail,
                 'email_verified_at' => now(),
@@ -49,11 +52,21 @@ class UsersTableSeeder extends Seeder
                 'ward' => $faker->city,
                 'street' => $faker->streetAddress,
                 'remember_token' => Str::random(10),
-                'current_team_id' => null, // Adjust as needed
-                'profile_photo_path' => $faker->imageUrl(400, 400, 'people', true, 'Faker'), // Optional
+                'current_team_id' => null,
+                'profile_photo_path' => $faker->imageUrl(400, 400, 'people', true, 'Faker'),
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
+
+            if ($user->role === 'leader') {
+                if ($leaders->count() > 0) {
+                    $user->leader_id = $leaders->random()->id;
+                } 
+                else {
+                    $user->leader_id = rand(1, 9);
+                }
+                $user->save();
+            }
         }
     }
 }

@@ -17,16 +17,18 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->enum('role', ['citizen', 'leader', 'admin']); // Add role field
+            $table->enum('role', ['citizen', 'leader', 'admin']);
             $table->string('country')->nullable();
             $table->string('region')->nullable();
             $table->string('ward')->nullable();
             $table->string('street')->nullable();
+            $table->foreignId('leader_id')->nullable()->constrained('leaders')->onDelete('set null');
             $table->rememberToken();
             $table->foreignId('current_team_id')->nullable();
             $table->string('profile_photo_path', 2048)->nullable();
             $table->timestamps();
         });
+        
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
             $table->string('email')->primary();

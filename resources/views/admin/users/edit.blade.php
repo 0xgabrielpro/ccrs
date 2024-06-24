@@ -48,7 +48,15 @@
                         <label for="street" class="block text-gray-600 font-semibold">Street</label>
                         <input type="text" id="street" name="street" value="{{ $user->street }}" class="form-input mt-1 block w-full">
                     </div>
-
+                    <div class="mb-4">
+                        <label for="leader_id" class="block text-gray-600 font-semibold">leader</label>
+                        <select id="leader_id" name="leader_id" class="form-select mt-1 block w-full">
+                            <option value="">Select Leader</option>
+                            @foreach ($leaders as $leader)
+                                <option value="{{ $leader->id }}">{{ $leader->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
                     <div class="flex justify-end">
                         <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">Update</button>
                     </div>

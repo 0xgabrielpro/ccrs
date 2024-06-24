@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use App\Models\Issue;
 use App\Models\User;
+use App\Models\Category;
 use Faker\Factory as Faker;
 
 class IssuesTableSeeder extends Seeder
@@ -18,6 +19,7 @@ class IssuesTableSeeder extends Seeder
     {
         $faker = Faker::create();
         $users = User::all();
+        $categories = Category::pluck('id');
 
         if ($users->count() === 0) {
             $this->command->info('Please create some users first!');
@@ -26,18 +28,25 @@ class IssuesTableSeeder extends Seeder
 
         foreach ($users as $user) {
             for ($i = 0; $i < 4; $i++) {
-                Issue::create([
+                $status = $faker->randomElement(['open', 'inprogress', 'resolved', 'closed']);
+                $citizenSatisfied = $faker->optional()->boolean;
+
+                $issue = new Issue([
                     'user_id' => $user->id,
                     'title' => $faker->sentence,
                     'description' => $faker->paragraph,
-                    'category_id' => null, // No categories table, so we set it to null
-                    'location' => $faker->address,
-                    'visibility' => $faker->boolean,
-                    'status' => $faker->randomElement(['open', 'inprogress', 'resolved', 'closed']),
-                    'citizen_satisfied' => $faker->optional()->boolean,
+                    'category_id' => $categories->random(), 
+                    'status' => $status,
+                    'citizen_satisfied' => $citizenSatisfied,
                     'created_at' => now(),
                     'updated_at' => now(),
                 ]);
+
+                $issue->sealed_by = $user->id;
+                $issue->to_user_id = $users->random()->id;
+                $issue->file_path = $faker->imageUrl(); // Example file path, adjust as needed
+
+                $issue->save();
             }
         }
     }

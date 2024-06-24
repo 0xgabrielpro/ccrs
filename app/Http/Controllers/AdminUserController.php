@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Leader; // Add Leader model import
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -23,7 +24,8 @@ class AdminUserController extends Controller
      */
     public function create()
     {
-        return view('admin.users.create');
+        $leaders = Leader::all();
+        return view('admin.users.create', compact('leaders'));
     }
 
     /**
@@ -40,6 +42,7 @@ class AdminUserController extends Controller
             'region' => 'nullable|string|max:255',
             'ward' => 'nullable|string|max:255',
             'street' => 'nullable|string|max:255',
+            'leader_id' => 'nullable|exists:leaders,id',
         ]);
 
         if ($validator->fails()) {
@@ -55,6 +58,7 @@ class AdminUserController extends Controller
             'region' => $request->region,
             'ward' => $request->ward,
             'street' => $request->street,
+            'leader_id' => $request->leader_id, 
         ]);
 
         return redirect()->route('admin.users.index')->with('success', 'User created successfully.');
@@ -68,9 +72,14 @@ class AdminUserController extends Controller
         return view('admin.users.show', compact('user'));
     }
 
+    /**
+     * Show the form for editing the specified resource.
+     */
     public function showEditForm($id)
     {
-        return view('admin.users.edit', ['user' => User::findOrFail($id)]);
+        $user = User::findOrFail($id);
+        $leaders = Leader::all(); 
+        return view('admin.users.edit', compact('user', 'leaders'));
     }
 
     /**
@@ -87,6 +96,7 @@ class AdminUserController extends Controller
             'region' => 'nullable|string|max:255',
             'ward' => 'nullable|string|max:255',
             'street' => 'nullable|string|max:255',
+            'leader_id' => 'nullable|exists:leaders,id',
         ]);
 
         if ($validator->fails()) {
@@ -102,6 +112,7 @@ class AdminUserController extends Controller
             'region' => $request->region,
             'ward' => $request->ward,
             'street' => $request->street,
+            'leader_id' => $request->leader_id,
         ]);
 
         return redirect()->route('admin.users.index')->with('success', 'User updated successfully.');
