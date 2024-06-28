@@ -9,7 +9,7 @@
         <div class="max-w-lg mx-auto bg-white shadow-md rounded-lg overflow-hidden">
             <div class="px-6 py-4">
                 <h2 class="text-2xl font-semibold mb-2">Edit User</h2>
-                <form action="{{ route('admin.users.edit', $user) }}" method="POST">
+                <form action="{{ route('admin.users.update', $user) }}" method="POST">
                     @csrf
                     @method('PUT')
                     <div class="mb-4">

@@ -44,7 +44,7 @@ class IssuesTableSeeder extends Seeder
 
                 $issue->sealed_by = $user->id;
                 $issue->to_user_id = $users->random()->id;
-                $issue->file_path = $faker->imageUrl(); // Example file path, adjust as needed
+                $issue->file_path = "profiles/default.jpg";
 
                 $issue->save();
             }

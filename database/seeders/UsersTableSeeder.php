@@ -19,7 +19,25 @@ class UsersTableSeeder extends Seeder
     public function run()
     {
         $faker = Faker::create();
-
+        
+        // Create an anonymous citizen
+        User::create([
+            'name' => 'Anonymous',
+            'email' => 'anon@anonymous.com',
+            'email_verified_at' => now(),
+            'password' => Hash::make('password'),
+            'role' => 'citizen',
+            'country' => $faker->country,
+            'region' => $faker->state,
+            'ward' => $faker->city,
+            'street' => $faker->streetAddress,
+            'remember_token' => Str::random(10),
+            'current_team_id' => null,
+            'profile_photo_path' => $faker->imageUrl(400, 400, 'people', true, 'Faker'),
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+        
         // Create an admin user
         User::create([
             'name' => 'Admin',
@@ -53,7 +71,7 @@ class UsersTableSeeder extends Seeder
                 'street' => $faker->streetAddress,
                 'remember_token' => Str::random(10),
                 'current_team_id' => null,
-                'profile_photo_path' => $faker->imageUrl(400, 400, 'people', true, 'Faker'),
+                'profile_photo_path' => "https://0xgabrielpro.github.io/test/profile.jpeg",
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);

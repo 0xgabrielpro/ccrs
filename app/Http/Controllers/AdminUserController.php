@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use App\Models\Leader; // Add Leader model import
+use App\Models\Leader;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -33,7 +33,7 @@ class AdminUserController extends Controller
      */
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), [
+        $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|confirmed',
@@ -44,10 +44,6 @@ class AdminUserController extends Controller
             'street' => 'nullable|string|max:255',
             'leader_id' => 'nullable|exists:leaders,id',
         ]);
-
-        if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator)->withInput();
-        }
 
         User::create([
             'name' => $request->name,
@@ -75,9 +71,8 @@ class AdminUserController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function showEditForm($id)
+    public function edit(User $user)
     {
-        $user = User::findOrFail($id);
         $leaders = Leader::all(); 
         return view('admin.users.edit', compact('user', 'leaders'));
     }
@@ -85,12 +80,12 @@ class AdminUserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function edit(Request $request, User $user)
+    public function update(Request $request, User $user)
     {
-        $validator = Validator::make($request->all(), [
+        $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
-            'password' => 'nullable|string',
+            'password' => 'nullable|string|confirmed',
             'role' => 'required|in:citizen,leader,admin',
             'country' => 'nullable|string|max:255',
             'region' => 'nullable|string|max:255',
@@ -98,10 +93,6 @@ class AdminUserController extends Controller
             'street' => 'nullable|string|max:255',
             'leader_id' => 'nullable|exists:leaders,id',
         ]);
-
-        if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator)->withInput();
-        }
 
         $user->update([
             'name' => $request->name,

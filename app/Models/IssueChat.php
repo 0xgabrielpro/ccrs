@@ -15,11 +15,13 @@ class IssueChat extends Model
         'msg',
     ];
 
+    // Define the relationship with the User model
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
 
+    // Define the relationship with the Issue model
     public function issue()
     {
         return $this->belongsTo(Issue::class, 'issue_id');

@@ -20,11 +20,11 @@ class CreateIssuesTable extends Migration
             $table->text('description');
             $table->unsignedBigInteger('category_id')->nullable();
             $table->enum('status', ['open', 'inprogress', 'resolved', 'closed'])->default('open');
-            $table->timestamps();
             $table->boolean('citizen_satisfied')->nullable();
             $table->unsignedBigInteger('sealed_by')->nullable();
             $table->unsignedBigInteger('to_user_id')->nullable();
             $table->string('file_path')->nullable();
+            $table->timestamps();
 
             // Foreign key constraints
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');

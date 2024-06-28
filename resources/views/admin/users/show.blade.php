@@ -36,7 +36,7 @@
                 </tbody>
             </table>
             <div class="bg-gray-50 px-6 py-4">
-                <a href="{{ route('admin.users.showEditForm', $user) }}" class="inline-block px-4 py-2 bg-green-500 text-white font-bold rounded-lg shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                <a href="{{ route('admin.users.edit', $user) }}" class="inline-block px-4 py-2 bg-green-500 text-white font-bold rounded-lg shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
                     Edit User
                     <svg xmlns="http://www.w3.org/2000/svg" class="ml-2 -mr-1 w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.825 16.175a3.5 3.5 0 0 1-5 0l-4.5-4.5a3.5 3.5 0 0 1 0-5l1.825-1.825a1 1 0 0 1 1.414 1.414l-4.5 4.5a1 1 0 0 0 0 1.414l1.825 1.825z" />

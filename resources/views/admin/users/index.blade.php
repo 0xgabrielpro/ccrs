@@ -26,7 +26,7 @@
                     <span class="bg-blue-200 text-blue-800 px-2 py-1 rounded-full text-xs font-semibold uppercase mr-2">{{ $user->role }}</span>
                     <div class="mt-4 flex justify-end">
                         <a href="{{ route('admin.users.show', $user) }}" class="text-blue-500 hover:underline mr-2">View</a>
-                        <a href="{{ route('admin.users.showEditForm', $user->id) }}" class="text-blue-500 hover:underline mr-2">Edit</a>                        
+                        <a href="{{ route('admin.users.edit', $user->id) }}" class="text-blue-500 hover:underline mr-2">Edit</a>                        
                         <form action="{{ route('admin.users.destroy', $user) }}" method="POST" class="inline">
                             @csrf
                             @method('DELETE')

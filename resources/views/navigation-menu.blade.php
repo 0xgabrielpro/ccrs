@@ -21,7 +21,7 @@
                                 {{ __('Users') }}
                             </x-nav-link>
                         @else
-                            <x-nav-link href="{{ route('issues') }}" :active="request()->routeIs('issues')">
+                            <x-nav-link href="{{ route('myissues') }}" :active="request()->routeIs('myissues')">
                                 {{ __('My Issues') }}
                             </x-nav-link>
                         @endif
@@ -163,7 +163,7 @@
                 @if (Auth::user()->role == 'admin')
                     <a href="{{ route('admin.users.index') }}" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">{{ __('Users') }}</a>
                 @else
-                    <a href="{{ route('issues') }}" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">{{ __('My Issues') }}</a>
+                    <a href="{{ route('myissues') }}" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">{{ __('My Issues') }}</a>
                 @endif
             @endauth
         </div>

@@ -4,34 +4,50 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\AdminUserController;
-
-
+use App\Http\Controllers\IssueController;
+use App\Http\Controllers\IssueChatController;
+use App\Http\Controllers\EvidenceController;
 
 Route::get('/welcome', function (){
     return view('welcome');
 });
 
-Route::middleware([
-    'auth:sanctum',
-    config('jetstream.auth_session'),
-    'verified',
-])->group(function () {
-    Route::get('/', [HomeController::class, 'index'])->name('home');
-});
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
-Route::middleware(['auth:sanctum', 'verified'])->get('/issues', function () {
-    return view('issues');
-})->name('issues');
+// Route::middleware([
+//     'auth:sanctum',
+//     config('jetstream.auth_session'),
+//     'verified',
+// ])->group(function () {
+//     Route::get('/', [HomeController::class, 'index'])->name('home');
+// });
+
+Route::middleware(['auth:sanctum', 'verified'])->get('/myissues', function () {
+    return view('myissues');
+})->name('myissues');
 
 
 Route::group(['middleware' => 'admin'], function () {
-    Route::get('/admin/users/create', [AdminUserController::class, 'create'])->name('admin.users.create');
-    Route::post('/admin/users', [AdminUserController::class, 'store'])->name('admin.users.store');
     Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
-    Route::get('/admin/users/index', [AdminUserController::class, 'index'])->name('admin.users.index');
-    Route::get('/admin/users/{user}', [AdminUserController::class, 'show'])->name('admin.users.show');
-    Route::get('/admin/users/{user}/showEditForm', [AdminUserController::class, 'showEditForm'])->name('admin.users.showEditForm');
-    Route::put('/admin/users/{user}/edit', [AdminUserController::class, 'edit'])->name('admin.users.edit');
-    Route::delete('/admin/users/{user}', [AdminUserController::class, 'destroy'])->name('admin.users.destroy');
+
+    Route::prefix('admin/users')->name('admin.users.')->group(function () {
+        Route::get('/create', [AdminUserController::class, 'create'])->name('create');
+        Route::post('/', [AdminUserController::class, 'store'])->name('store');
+        Route::get('/', [AdminUserController::class, 'index'])->name('index');
+        Route::get('/{user}', [AdminUserController::class, 'show'])->name('show');
+        Route::get('/{user}/edit', [AdminUserController::class, 'edit'])->name('edit');
+        Route::put('/{user}', [AdminUserController::class, 'update'])->name('update');
+        Route::delete('/{user}', [AdminUserController::class, 'destroy'])->name('destroy');
+    });
 });
 
+
+
+Route::resource('issues', IssueController::class);
+Route::post('issues/{issue}/reopen', [IssueController::class, 'reopen'])->name('issues.reopen');
+Route::post('issues/{issue}/rate', [IssueController::class, 'rate'])->name('issues.rate');
+Route::post('issues/{issue}/forward', [IssueController::class, 'forward'])->name('issues.forward');
+Route::get('evidence/download/{file}', [EvidenceController::class, 'download'])->name('evidence.download');
+
+
+Route::resource('issue_chats', IssueChatController::class);
