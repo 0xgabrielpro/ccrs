@@ -48,6 +48,7 @@ Route::post('issues/{issue}/reopen', [IssueController::class, 'reopen'])->name('
 Route::post('issues/{issue}/rate', [IssueController::class, 'rate'])->name('issues.rate');
 Route::post('issues/{issue}/forward', [IssueController::class, 'forward'])->name('issues.forward');
 Route::get('evidence/download/{file}', [EvidenceController::class, 'download'])->name('evidence.download');
+Route::put('/issues/{issue}/update_status', [IssueController::class, 'updateStatus'])->name('issues.update_status');
 
 
 Route::resource('issue_chats', IssueChatController::class);

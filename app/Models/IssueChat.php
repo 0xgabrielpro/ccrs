@@ -13,6 +13,7 @@ class IssueChat extends Model
         'user_id',
         'issue_id',
         'msg',
+        'file_path',
     ];
 
     // Define the relationship with the User model

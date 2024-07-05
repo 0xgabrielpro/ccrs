@@ -5,6 +5,7 @@ use App\Models\Issue;
 use App\Models\Category;
 use App\Models\IssueChat;
 use App\Models\User;
+use App\Models\Leader;
 use Illuminate\Http\Request;
 use App\Helpers\UserHelper;
 
@@ -49,15 +50,16 @@ class IssueController extends Controller
             'to_user_id' => UserHelper::findMatchingUserId(auth()->id(), 'leader', 1),
             'citizen_satisfied' => null,
         ]);
-        var_dump(UserHelper::findMatchingUserId(auth()->id(), 'leader', 1));
-        
+        // echo UserHelper::findMatchingUserId(auth()->id(), 'leader', 1);
+        // var_dump(UserHelper::findMatchingUserId(auth()->id(), 'leader', 1));
+
         return redirect()->route('myissues')->with('success', 'Issue created successfully.');
     }
 
     public function show(Issue $issue)
     {
         $issue->load('chats.user');
-        $leaders = User::where('role', 'leader')->get();
+        $leaders = Leader::all();
         return view('issues.show', compact('issue', 'leaders'));
     }
 
@@ -138,4 +140,23 @@ class IssueController extends Controller
 
         return redirect()->route('issues.show', $issue->id)->with('success', 'Issue forwarded successfully.');
     }
+
+    public function updateStatus(Request $request, Issue $issue)
+    {
+        if (auth()->user()->role != 'leader') {
+            abort(403, 'Unauthorized action.');
+        }
+
+        $request->validate([
+            'status' => 'required|string|in:inprogress,resolved,closed',
+        ]);
+
+        $issue->status = $request->status;
+        $issue->sealed_by = auth()->id();
+        $issue->save();
+
+        return redirect()->route('issues.show', $issue->id)->with('success', 'Status updated successfully.');
+    }
+
+
 }

@@ -33,7 +33,7 @@
                     </div>
                     <input type="hidden" name="status" value="open">
                     <input type="hidden" name="visibility" value="1">
-                    <input type="hidden" name="to_user_id" value="{{ \App\Helpers\UserHelper::findMatchingUser(auth()->user()->id, 'leader', 1) }}">
+                    <input type="hidden" name="to_user_id" value="{{ \App\Helpers\UserHelper::findMatchingUserId(auth()->user()->id, 'leader', 1) }}">
                 </div>
                 <div class="bg-gray-50 px-6 py-4">
                     <button type="submit" class="inline-block px-4 py-2 bg-green-500 text-white font-bold rounded-lg shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">

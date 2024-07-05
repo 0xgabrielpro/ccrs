@@ -25,12 +25,21 @@ class IssueChatController extends Controller
          $request->validate([
              'msg' => 'required|string|max:255',
              'issue_id' => 'required|exists:issues,id',
+             'file' => 'nullable|file|mimes:jpeg,png,jpg,gif,svg,pdf,doc,docx,txt|max:2048',
          ]);
+
+        $filePath = null;
+        if ($request->hasFile('file')) {
+            $file = $request->file('file');
+            $fileName = time() . '_' . $file->getClientOriginalName();
+            $filePath = $file->storeAs('files', $fileName, 'public');
+        }
      
          $issueChat = new IssueChat([
              'msg' => $request->input('msg'),
              'issue_id' => $request->input('issue_id'),
              'user_id' => auth()->id(), 
+             'file_path' => $filePath,
          ]);
      
          $issueChat->save();
