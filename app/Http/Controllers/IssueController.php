@@ -164,5 +164,9 @@ class IssueController extends Controller
         return redirect()->route('issues.show', $issue->id)->with('success', 'Status updated successfully.');
     }
 
-
+    public function leaderIssues()
+    {
+        $issues = Issue::where('to_user_id', auth()->id())->orderBy('created_at', 'desc')->get();
+        return view('issues.leader', compact('issues'));
+    }
 }

@@ -57,3 +57,7 @@ Route::resource('anon-issues', AnonIssueController::class);
 Route::resource('issue_chats', IssueChatController::class);
 
 Route::get('/leaderboard', [LeaderboardController::class, 'index'])->name('leaderboard.index');
+
+Route::middleware(['auth', 'role:leader'])->group(function () {
+    Route::get('/leader/issues', [IssueController::class, 'leaderIssues'])->name('leader.issues');
+});
