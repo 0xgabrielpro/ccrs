@@ -8,6 +8,8 @@ use App\Http\Controllers\IssueController;
 use App\Http\Controllers\IssueChatController;
 use App\Http\Controllers\EvidenceController;
 use App\Http\Controllers\AnonIssueController;
+use App\Http\Controllers\LeaderboardController;
+
 
 Route::get('/welcome', function (){
     return view('welcome');
@@ -53,3 +55,5 @@ Route::put('/issues/{issue}/update_status', [IssueController::class, 'updateStat
 
 Route::resource('anon-issues', AnonIssueController::class);
 Route::resource('issue_chats', IssueChatController::class);
+
+Route::get('/leaderboard', [LeaderboardController::class, 'index'])->name('leaderboard.index');

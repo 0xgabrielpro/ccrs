@@ -70,4 +70,9 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function issues()
+    {
+        return $this->hasMany(Issue::class, 'sealed_by');
+    }
 }
