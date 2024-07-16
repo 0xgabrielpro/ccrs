@@ -12,7 +12,7 @@
                     <h1 class="text-3xl font-bold mb-6">All Public Issues</h1>
                     <div class="mb-6 flex items-center justify-between">
                         <div class="flex ml-4 space-x-2">
-                            <a href="{{ route('issues.create') }}" class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-700">Report Anonymously</a>
+                            <a href="{{ route('anon-issues.create') }}" class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-700">Report Anonymously</a>
                         </div>
 
                         <form method="GET" action="{{ route('issues.index') }}" class="flex w-full max-w-md">

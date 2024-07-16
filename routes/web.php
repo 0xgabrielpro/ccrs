@@ -7,6 +7,7 @@ use App\Http\Controllers\AdminUserController;
 use App\Http\Controllers\IssueController;
 use App\Http\Controllers\IssueChatController;
 use App\Http\Controllers\EvidenceController;
+use App\Http\Controllers\AnonIssueController;
 
 Route::get('/welcome', function (){
     return view('welcome');
@@ -50,5 +51,5 @@ Route::post('issues/{issue}/forward', [IssueController::class, 'forward'])->name
 Route::get('evidence/download/{file}', [EvidenceController::class, 'download'])->name('evidence.download');
 Route::put('/issues/{issue}/update_status', [IssueController::class, 'updateStatus'])->name('issues.update_status');
 
-
+Route::resource('anon-issues', AnonIssueController::class);
 Route::resource('issue_chats', IssueChatController::class);

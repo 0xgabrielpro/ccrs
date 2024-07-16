@@ -42,4 +42,40 @@ class UserHelper
 
         return $matchingUser ? $matchingUser->id : null;
     }
+
+    public static function findMatchingByUserLocation($country, $region, $ward, $street, $role, $position)
+    {
+        
+        $query = User::where('role', $role)
+                     ->where('leader_id', $position);
+
+        switch ($position) {
+            case 1:
+                $query->where('country', $country)
+                      ->where('region', $region)
+                      ->where('ward', $ward)
+                      ->where('street', $street);
+                break;
+            case 2:
+            case 3:
+            case 4:
+            case 5:
+            case 6:
+                $query->where('country', $country)
+                      ->where('region', $region)
+                      ->where('ward', $ward);
+                break;
+            case 7:
+                $query->where('country', $country)
+                      ->where('region', $region);
+                break;
+            case 9:
+                $query->where('country', $country);
+                break;
+        }
+
+        $matchingUser = $query->first();
+
+        return $matchingUser ? $matchingUser->id : null;
+    }
 }

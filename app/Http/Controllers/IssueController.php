@@ -50,8 +50,6 @@ class IssueController extends Controller
             'to_user_id' => UserHelper::findMatchingUserId(auth()->id(), 'leader', 1),
             'citizen_satisfied' => null,
         ]);
-        // echo UserHelper::findMatchingUserId(auth()->id(), 'leader', 1);
-        // var_dump(UserHelper::findMatchingUserId(auth()->id(), 'leader', 1));
 
         return redirect()->route('myissues')->with('success', 'Issue created successfully.');
     }
@@ -82,6 +80,10 @@ class IssueController extends Controller
         $filePath = $issue->file_path;
         if ($request->hasFile('file_path')) {
             $filePath = $request->file('file_path')->store('files', 'public');
+
+            if ($issue->file_path) {
+                Storage::disk('public')->delete($anonIssue->file_path);
+            }
         }
 
         $issue->update([
@@ -96,6 +98,10 @@ class IssueController extends Controller
 
     public function destroy(Issue $issue)
     {
+        if ($issue->file_path) {
+            Storage::disk('public')->delete($issue->file_path);
+        }
+
         $issue->delete();
         return redirect()->route('issues.index')->with('success', 'Issue deleted successfully.');
     }
