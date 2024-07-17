@@ -47,7 +47,7 @@ class IssueController extends Controller
             'file_path' => $filePath,
             'status' => 'open',
             'visibility' => 0,
-            'to_user_id' => UserHelper::findMatchingUserId(auth()->id(), 'leader', 1),
+            'to_user_id' => UserHelper::findMatchingUserId(auth()->id(), 'leader', 1, $request->category_id),
             'citizen_satisfied' => null,
         ]);
 
@@ -141,7 +141,7 @@ class IssueController extends Controller
         }
 
         $issue->update([
-            'to_user_id' => UserHelper::findMatchingUserId($issue->user_id, 'leader', $request->forward_to),
+            'to_user_id' => UserHelper::findMatchingUserId($issue->user_id, 'leader', $request->forward_to, $issue->category_id),
         ]);
 
         return redirect()->route('issues.show', $issue->id)->with('success', 'Issue forwarded successfully.');
@@ -168,5 +168,14 @@ class IssueController extends Controller
     {
         $issues = Issue::where('to_user_id', auth()->id())->orderBy('created_at', 'desc')->get();
         return view('issues.leader', compact('issues'));
+    }
+
+    public function myArea()
+    {
+        $leaderId = auth()->user()->id;
+        $matchingIssueIds = UserHelper::findMatchingIssuesForLeader($leaderId);
+        $issues = Issue::whereIn('id', $matchingIssueIds)->get();
+        // print_r($issues);
+        return view('issues.myarea', compact('issues'));
     }
 }

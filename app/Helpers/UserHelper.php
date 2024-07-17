@@ -3,10 +3,22 @@
 namespace App\Helpers;
 
 use App\Models\User;
+use App\Models\Issue;
 
 class UserHelper
 {
-    public static function findMatchingUserId($userId, $role, $position)
+    public static function getLeaderPosition($leaderId)
+    {
+        $leader = User::find($leaderId);
+
+        if (!$leader) {
+            return null; 
+        }
+
+        return $leader->leader_id;
+    }
+
+    public static function findMatchingUserId($userId, $role, $position, $category_id)
     {
         $sampleUser = User::findOrFail($userId);
 
@@ -30,8 +42,7 @@ class UserHelper
                       ->where('ward', $sampleUser->ward);
                 break;
             case 7:
-                $query->where('country', $sampleUser->country)
-                      ->where('region', $sampleUser->region);
+                $query->where('category_id', $category_id);
                 break;
             case 9:
                 $query->where('country', $sampleUser->country);
@@ -43,7 +54,7 @@ class UserHelper
         return $matchingUser ? $matchingUser->id : null;
     }
 
-    public static function findMatchingByUserLocation($country, $region, $ward, $street, $role, $position)
+    public static function findMatchingByUserLocation($country, $region, $ward, $street, $role, $position, $category_id)
     {
         
         $query = User::where('role', $role)
@@ -66,8 +77,7 @@ class UserHelper
                       ->where('ward', $ward);
                 break;
             case 7:
-                $query->where('country', $country)
-                      ->where('region', $region);
+                $query->where('category_id', $category_id);
                 break;
             case 9:
                 $query->where('country', $country);
@@ -78,4 +88,23 @@ class UserHelper
 
         return $matchingUser ? $matchingUser->id : null;
     }
+
+    public static function findMatchingIssuesForLeader($leaderId)
+    {
+        
+        $matchingIssueIds = [];
+        $leaderRole = 'leader';
+        $leaderPosition = self::getLeaderPosition($leaderId);
+        $issues = Issue::all();
+        foreach ($issues as $issue) {
+            $matchingUserId = self::findMatchingUserId($issue->user_id, $leaderRole, $leaderPosition, $issue->category_id);
+
+            if ($matchingUserId == $leaderId) {
+                $matchingIssueIds[] = $issue->id;
+            }
+        }
+
+        return $matchingIssueIds;
+    }
+
 }
