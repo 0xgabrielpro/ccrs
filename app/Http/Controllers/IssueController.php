@@ -175,7 +175,48 @@ class IssueController extends Controller
         $leaderId = auth()->user()->id;
         $matchingIssueIds = UserHelper::findMatchingIssuesForLeader($leaderId);
         $issues = Issue::whereIn('id', $matchingIssueIds)->get();
-        // print_r($issues);
+
         return view('issues.myarea', compact('issues'));
     }
+
+    public function showInsights()
+    {
+        $leaderId = auth()->user()->id;
+        $matchingIssueIds = UserHelper::findMatchingIssuesForLeader($leaderId);
+    
+        $issues = Issue::whereIn('id', $matchingIssueIds)->get();
+    
+        $statusCounts = [
+            'open' => 0,
+            'closed' => 0,
+            'inprogress' => 0,
+            'resolved' => 0,
+        ];
+    
+        foreach ($issues as $issue) {
+            switch ($issue->status) {
+                case 'open':
+                    $statusCounts['open']++;
+                    break;
+                case 'closed':
+                    $statusCounts['closed']++;
+                    break;
+                case 'inprogress':
+                    $statusCounts['inprogress']++;
+                    break;
+                case 'resolved':
+                    $statusCounts['resolved']++;
+                    break;
+                default:
+                    break;
+            }
+        }
+    
+        $statusLabels = array_keys($statusCounts);
+        $statusData = array_values($statusCounts);
+    
+        return view('issues.insights', compact('statusLabels', 'statusData'));
+    }
+    
+    
 }

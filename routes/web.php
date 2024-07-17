@@ -61,4 +61,5 @@ Route::get('/leaderboard', [LeaderboardController::class, 'index'])->name('leade
 Route::middleware(['auth', 'role:leader'])->group(function () {
     Route::get('/leader/issues', [IssueController::class, 'leaderIssues'])->name('leader.issues');
     Route::get('/leader/myarea', [IssueController::class, 'myArea'])->name('leader.myarea');
+    Route::get('/leader/insights', [IssueController::class, 'showInsights'])->name('leader.insights');
 });
