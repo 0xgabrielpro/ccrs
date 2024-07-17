@@ -23,9 +23,15 @@
                             <x-nav-link href="{{ route('admin.users.index') }}" :active="request()->routeIs('admin.users.*')">
                                 {{ __('Users') }}
                             </x-nav-link>
-                        @else
-                            <x-nav-link href="{{ route('myissues') }}" :active="request()->routeIs('myissues')">
-                                {{ __('My Issues') }}
+                        @elseif (Auth::user()->role == 'leader')
+                            <x-nav-link href="{{ route('leader.issues') }}" :active="request()->routeIs('leader.issues')">
+                                {{ __('Tagged Issues') }}
+                            </x-nav-link>
+                            <x-nav-link href="{{ route('leader.myarea') }}" :active="request()->routeIs('leader.myarea')">
+                                {{ __('My Area') }}
+                            </x-nav-link>
+                            <x-nav-link href="{{ route('leader.insights') }}" :active="request()->routeIs('leader.insights')">
+                                {{ __('Insights') }}
                             </x-nav-link>
                         @endif
                     @endauth
@@ -85,6 +91,7 @@
                             </x-dropdown>
                         </div>
                     @endif --}}
+
 
                     <!-- Settings Dropdown -->
                     <div class="ms-3 relative">
@@ -166,8 +173,10 @@
             @auth
                 @if (Auth::user()->role == 'admin')
                     <a href="{{ route('admin.users.index') }}" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md">Users</a>
-                @else
-                    <a href="{{ route('myissues') }}" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md">My Issues</a>
+                @elseif (Auth::user()->role == 'leader')
+                    <a href="{{ route('leader.issues') }}" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md">Tagged Issues</a>
+                    <a href="{{ route('leader.myarea') }}" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md">My Area</a>
+                    <a href="{{ route('leader.insights') }}" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md">Insights</a>
                 @endif
             @endauth
         </div>
@@ -237,26 +246,26 @@
                             <x-switchable-team :team="$team" component="x-responsive-nav-link" />
                         @endforeach
                     @endif --}}
-            </div>
-        @else
-            <!-- Show Login and Register links if the user is not authenticated -->
-            <div class="pt-4 pb-1 border-t border-gray-200 dark:border-gray-600">
-                <div class="flex items-center px-4">
-                    <div>
-                        <div class="font-medium text-base text-gray-800 dark:text-gray-200">Guest</div>
+                </div>
+            @else
+                <!-- Show Login and Register links if the user is not authenticated -->
+                <div class="pt-4 pb-1 border-t border-gray-200 dark:border-gray-600">
+                    <div class="flex items-center px-4">
+                        <div>
+                            <div class="font-medium text-base text-gray-800 dark:text-gray-200">Guest</div>
+                        </div>
+                    </div>
+
+                    <div class="mt-3 space-y-1">
+                        <x-responsive-nav-link href="{{ route('login') }}" :active="request()->routeIs('login')">
+                            {{ __('Login') }}
+                        </x-responsive-nav-link>
+
+                        <x-responsive-nav-link href="{{ route('register') }}" :active="request()->routeIs('register')">
+                            {{ __('Register') }}
+                        </x-responsive-nav-link>
                     </div>
                 </div>
-
-                <div class="mt-3 space-y-1">
-                    <x-responsive-nav-link href="{{ route('login') }}" :active="request()->routeIs('login')">
-                        {{ __('Login') }}
-                    </x-responsive-nav-link>
-
-                    <x-responsive-nav-link href="{{ route('register') }}" :active="request()->routeIs('register')">
-                        {{ __('Register') }}
-                    </x-responsive-nav-link>
-                </div>
-            </div>
-        @endauth
-    </div>
+            @endauth
+        </div>
 </nav>
