@@ -9,6 +9,7 @@ use App\Http\Controllers\IssueChatController;
 use App\Http\Controllers\EvidenceController;
 use App\Http\Controllers\AnonIssueController;
 use App\Http\Controllers\LeaderboardController;
+use App\Http\Controllers\LocationController;
 
 
 Route::get('/welcome', function (){
@@ -24,10 +25,6 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 // ])->group(function () {
 //     Route::get('/', [HomeController::class, 'index'])->name('home');
 // });
-
-Route::middleware(['auth:sanctum', 'verified'])->get('/myissues', function () {
-    return view('myissues');
-})->name('myissues');
 
 
 Route::group(['middleware' => 'admin'], function () {
@@ -45,6 +42,9 @@ Route::group(['middleware' => 'admin'], function () {
 });
 
 
+Route::middleware(['auth:sanctum', 'verified'])->get('/myissues', function () {
+    return view('myissues');
+})->name('myissues');
 
 Route::resource('issues', IssueController::class);
 Route::post('issues/{issue}/reopen', [IssueController::class, 'reopen'])->name('issues.reopen');
@@ -63,3 +63,9 @@ Route::middleware(['auth', 'role:leader'])->group(function () {
     Route::get('/leader/myarea', [IssueController::class, 'myArea'])->name('leader.myarea');
     Route::get('/leader/insights', [IssueController::class, 'showInsights'])->name('leader.insights');
 });
+
+Route::get('/api2/countries', [LocationController::class, 'getCountries']);
+Route::get('/api2/regions', [LocationController::class, 'getRegions']);
+Route::get('/api2/districts', [LocationController::class, 'getDistricts']);
+Route::get('/api2/wards', [LocationController::class, 'getWards']);
+Route::get('/api2/streets', [LocationController::class, 'getStreets']);

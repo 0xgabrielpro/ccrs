@@ -27,6 +27,7 @@ class DatabaseSeeder extends Seeder
             IssuesTableSeeder::class,
             AnonIssuesTableSeeder::class,
             IssuesChatTableSeeder::class,
+            LocationSeeder::class,
         ]);
         
     }
