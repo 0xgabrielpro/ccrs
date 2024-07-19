@@ -24,7 +24,7 @@
                             <div class="max-w-xl py-2 align-middle">
                                 <form method="POST" action="{{ route('anon-issues.store') }}"  role="form" enctype="multipart/form-data">
                                     @csrf
-                                    
+
                                     @include('anon-issue.form')
                                 </form>
                             </div>

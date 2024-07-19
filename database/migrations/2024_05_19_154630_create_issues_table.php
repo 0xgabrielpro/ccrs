@@ -23,6 +23,7 @@ class CreateIssuesTable extends Migration
             $table->boolean('citizen_satisfied')->nullable();
             $table->unsignedBigInteger('sealed_by')->nullable();
             $table->unsignedBigInteger('to_user_id')->nullable();
+            $table->unsignedBigInteger('read')->nullable();
             $table->string('file_path')->nullable();
             $table->timestamps();
 

@@ -10,12 +10,19 @@ use Illuminate\Database\Eloquent\Model;
  * @property $id
  * @property $title
  * @property $description
- * @property $country
- * @property $region
- * @property $ward
- * @property $street
+ * @property $status
+ * @property $country_id
+ * @property $region_id
+ * @property $district_id
+ * @property $ward_id
+ * @property $street_id
+ * @property $category_id
  * @property $file_path
  * @property $code
+ * @property $citizen_satisfied
+ * @property $sealed_by
+ * @property $to_user_id
+ * @property $read
  * @property $visibility
  * @property $created_at
  * @property $updated_at
@@ -33,7 +40,7 @@ class AnonIssue extends Model
      *
      * @var array<int, string>
      */
-    protected $fillable = ['title', 'description', 'country', 'region', 'ward', 'street', 'file_path', 'code', 'visibility'];
+    protected $fillable = ['title', 'description', 'status', 'country_id', 'region_id', 'district_id', 'ward_id', 'street_id', 'category_id', 'file_path', 'code', 'citizen_satisfied', 'sealed_by', 'to_user_id', 'read', 'visibility'];
 
 
 }

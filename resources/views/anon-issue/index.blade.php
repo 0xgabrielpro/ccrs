@@ -29,12 +29,19 @@
                                         
 									<th scope="col" class="py-3 pl-4 pr-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">Title</th>
 									<th scope="col" class="py-3 pl-4 pr-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">Description</th>
-									<th scope="col" class="py-3 pl-4 pr-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">Country</th>
-									<th scope="col" class="py-3 pl-4 pr-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">Region</th>
-									<th scope="col" class="py-3 pl-4 pr-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">Ward</th>
-									<th scope="col" class="py-3 pl-4 pr-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">Street</th>
+									<th scope="col" class="py-3 pl-4 pr-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">Status</th>
+									<th scope="col" class="py-3 pl-4 pr-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">Country Id</th>
+									<th scope="col" class="py-3 pl-4 pr-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">Region Id</th>
+									<th scope="col" class="py-3 pl-4 pr-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">District Id</th>
+									<th scope="col" class="py-3 pl-4 pr-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">Ward Id</th>
+									<th scope="col" class="py-3 pl-4 pr-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">Street Id</th>
+									<th scope="col" class="py-3 pl-4 pr-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">Category Id</th>
 									<th scope="col" class="py-3 pl-4 pr-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">File Path</th>
 									<th scope="col" class="py-3 pl-4 pr-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">Code</th>
+									<th scope="col" class="py-3 pl-4 pr-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">Citizen Satisfied</th>
+									<th scope="col" class="py-3 pl-4 pr-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">Sealed By</th>
+									<th scope="col" class="py-3 pl-4 pr-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">To User Id</th>
+									<th scope="col" class="py-3 pl-4 pr-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">Read</th>
 									<th scope="col" class="py-3 pl-4 pr-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">Visibility</th>
 
                                         <th scope="col" class="px-3 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500"></th>
@@ -47,12 +54,19 @@
                                             
 										<td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ $anonIssue->title }}</td>
 										<td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ $anonIssue->description }}</td>
-										<td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ $anonIssue->country }}</td>
-										<td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ $anonIssue->region }}</td>
-										<td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ $anonIssue->ward }}</td>
-										<td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ $anonIssue->street }}</td>
+										<td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ $anonIssue->status }}</td>
+										<td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ $anonIssue->country_id }}</td>
+										<td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ $anonIssue->region_id }}</td>
+										<td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ $anonIssue->district_id }}</td>
+										<td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ $anonIssue->ward_id }}</td>
+										<td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ $anonIssue->street_id }}</td>
+										<td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ $anonIssue->category_id }}</td>
 										<td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ $anonIssue->file_path }}</td>
 										<td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ $anonIssue->code }}</td>
+										<td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ $anonIssue->citizen_satisfied }}</td>
+										<td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ $anonIssue->sealed_by }}</td>
+										<td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ $anonIssue->to_user_id }}</td>
+										<td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ $anonIssue->read }}</td>
 										<td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ $anonIssue->visibility }}</td>
 
                                             <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900">

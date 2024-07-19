@@ -35,24 +35,13 @@ class AnonIssueController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(AnonIssueRequest $request)
+    public function store(AnonIssueRequest $request): RedirectResponse
     {
-        $anonIssue = AnonIssue::create($request->validated());
+        AnonIssue::create($request->validated());
 
-        $filePath = null;
-        if ($request->hasFile('file_path')) {
-            $file = $request->file('file_path');
-            $fileName = time() . '_' . $file->getClientOriginalName();
-            $filePath = $file->storeAs('files', $fileName, 'public');
-
-            $anonIssue->file_path = $filePath;
-            $anonIssue->update();
-        }
-    
-        return redirect()->route('anon-issues.show', $anonIssue->id)
-                         ->with('success', 'Issue created successfully.');
+        return Redirect::route('anon-issues.index')
+            ->with('success', 'AnonIssue created successfully.');
     }
-    
 
     /**
      * Display the specified resource.
@@ -79,38 +68,17 @@ class AnonIssueController extends Controller
      */
     public function update(AnonIssueRequest $request, AnonIssue $anonIssue): RedirectResponse
     {
-        if ($request->hasFile('file_path')) {
-
-            if ($anonIssue->file_path) {
-                Storage::disk('public')->delete($anonIssue->file_path);
-            }
-    
-            $file = $request->file('file_path');
-            $fileName = time() . '_' . $file->getClientOriginalName();
-            $filePath = $file->storeAs('files', $fileName, 'public');
-    
-            $anonIssue->file_path = $filePath;
-        }
-    
         $anonIssue->update($request->validated());
-    
+
         return Redirect::route('anon-issues.index')
             ->with('success', 'AnonIssue updated successfully');
     }
-    
 
     public function destroy($id): RedirectResponse
-{
-    $anonIssue = AnonIssue::find($id);
+    {
+        AnonIssue::find($id)->delete();
 
-    if ($anonIssue->file_path) {
-        Storage::disk('public')->delete($anonIssue->file_path);
+        return Redirect::route('anon-issues.index')
+            ->with('success', 'AnonIssue deleted successfully');
     }
-
-    $anonIssue->delete();
-
-    return Redirect::route('anon-issues.index')
-        ->with('success', 'AnonIssue deleted successfully');
-}
-
 }

@@ -3,7 +3,6 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Str;
 
 class AnonIssueRequest extends FormRequest
 {
@@ -23,27 +22,17 @@ class AnonIssueRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => 'required|string',
-            'description' => 'required|string',
-            'country' => 'required|string',
-            'region' => 'required|string',
-            'ward' => 'required|string',
-            'street' => 'required|string',
-            'file_path' => 'nullable|file|mimes:jpeg,png,jpg,gif,svg,pdf,doc,docx,txt|max:2048',
-            'code' => 'nullable|string',
-            'visibility' => 'nullable|boolean',
+			'title' => 'required|string',
+			'description' => 'required|string',
+			'status' => 'required|string',
+			'country_id' => 'required',
+			'region_id' => 'required',
+			'district_id' => 'required',
+			'ward_id' => 'required',
+			'street_id' => 'required',
+			'file_path' => 'string',
+			'code' => 'required|string',
+			'visibility' => 'required',
         ];
-    }
-
-    /**
-     * Prepare the data for validation.
-     */
-    protected function prepareForValidation()
-    {
-        
-        $this->merge([
-            'code' => $this->code ?? Str::random(10),
-            'visibility' => $this->visibility ?? 0,
-        ]);
     }
 }
