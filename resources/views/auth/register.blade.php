@@ -16,35 +16,35 @@
 
             <div>
                 <x-label for="country" value="{{ __('Country') }}" />
-                <select id="country" name="country" class="block mt-1 w-full form-select" required>
+                <select id="country" name="country_id" class="block mt-1 w-full form-select" required>
                     <option value="">{{ __('Select Country') }}</option>
                 </select>
             </div>
 
             <div>
                 <x-label for="region" value="{{ __('Region') }}" />
-                <select id="region" name="region" class="block mt-1 w-full form-select" required disabled>
+                <select id="region" name="region_id" class="block mt-1 w-full form-select" required disabled>
                     <option value="">{{ __('Select Region') }}</option>
                 </select>
             </div>
 
             <div>
                 <x-label for="district" value="{{ __('District') }}" />
-                <select id="district" name="district" class="block mt-1 w-full form-select" required disabled>
+                <select id="district" name="district_id" class="block mt-1 w-full form-select" required disabled>
                     <option value="">{{ __('Select District') }}</option>
                 </select>
             </div>
 
             <div>
                 <x-label for="ward" value="{{ __('Ward') }}" />
-                <select id="ward" name="ward" class="block mt-1 w-full form-select" required disabled>
+                <select id="ward" name="ward_id" class="block mt-1 w-full form-select" required disabled>
                     <option value="">{{ __('Select Ward') }}</option>
                 </select>
             </div>
 
             <div>
                 <x-label for="street" value="{{ __('Street') }}" />
-                <select id="street" name="street" class="block mt-1 w-full form-select" required disabled>
+                <select id="street" name="street_id" class="block mt-1 w-full form-select" required disabled>
                     <option value="">{{ __('Select Street') }}</option>
                 </select>
             </div>

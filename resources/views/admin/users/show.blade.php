@@ -4,7 +4,7 @@
             {{ __('User Details') }}
         </h2>
     </x-slot>
-
+ 
     <div class="container mx-auto px-4 py-8">
         <div class="bg-white shadow-md rounded-lg overflow-hidden">
             <table class="min-w-full divide-y divide-gray-200">
@@ -19,19 +19,23 @@
                     </tr>
                     <tr>
                         <td class="px-6 py-4 whitespace-nowrap font-semibold text-gray-800 dark:text-gray-200">Country</td>
-                        <td class="px-6 py-4 whitespace-nowrap">{{ $user->country }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">{{ $user->country->name }}</td>
                     </tr>
                     <tr>
                         <td class="px-6 py-4 whitespace-nowrap font-semibold text-gray-800 dark:text-gray-200">Region</td>
-                        <td class="px-6 py-4 whitespace-nowrap">{{ $user->region }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">{{ $user->region->name }}</td>
+                    </tr>
+                    <tr>
+                        <td class="px-6 py-4 whitespace-nowrap font-semibold text-gray-800 dark:text-gray-200">District</td>
+                        <td class="px-6 py-4 whitespace-nowrap">{{ $user->district->name }}</td>
                     </tr>
                     <tr>
                         <td class="px-6 py-4 whitespace-nowrap font-semibold text-gray-800 dark:text-gray-200">Ward</td>
-                        <td class="px-6 py-4 whitespace-nowrap">{{ $user->ward }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">{{ $user->ward->name }}</td>
                     </tr>
                     <tr>
                         <td class="px-6 py-4 whitespace-nowrap font-semibold text-gray-800 dark:text-gray-200">Street</td>
-                        <td class="px-6 py-4 whitespace-nowrap">{{ $user->street }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">{{ $user->street->name }}</td>
                     </tr>
                 </tbody>
             </table>

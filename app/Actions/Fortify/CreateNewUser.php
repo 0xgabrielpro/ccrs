@@ -31,11 +31,11 @@ class CreateNewUser implements CreatesNewUsers
         return DB::transaction(function () use ($input) {
             return tap(User::create([
                 'name' => $input['name'],
-                'country' => $input['country'],
-                'region' => $input['region'],
-                'district' => $input['district'],
-                'ward' => $input['ward'],
-                'street' => $input['street'],
+                'country_id' => $input['country_id'],
+                'region_id' => $input['region_id'],
+                'district_id' => $input['district_id'],
+                'ward_id' => $input['ward_id'],
+                'street_id' => $input['street_id'],
                 'role' => 'citizen',
                 'email' => $input['email'],
                 'category_id' => null,

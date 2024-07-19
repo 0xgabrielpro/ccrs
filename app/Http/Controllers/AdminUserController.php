@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\Leader;
+use App\Models\Category;
+use App\Models\Country;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -25,7 +27,9 @@ class AdminUserController extends Controller
     public function create()
     {
         $leaders = Leader::all();
-        return view('admin.users.create', compact('leaders'));
+        $categories = Category::all();
+        $countries = Country::all();
+        return view('admin.users.create', compact('leaders', 'categories', 'countries'));
     }
 
     /**
@@ -38,11 +42,13 @@ class AdminUserController extends Controller
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|confirmed',
             'role' => 'required|in:citizen,leader,admin',
-            'country' => 'nullable|string|max:255',
-            'region' => 'nullable|string|max:255',
-            'ward' => 'nullable|string|max:255',
-            'street' => 'nullable|string|max:255',
+            'country_id' => 'nullable',
+            'region_id' => 'nullable',
+            'district_id' => 'nullable',
+            'ward_id' => 'nullable',
+            'street_id' => 'nullable',
             'leader_id' => 'nullable|exists:leaders,id',
+            'category_id' => 'nullable|exists:categories,id',
         ]);
 
         User::create([
@@ -50,11 +56,13 @@ class AdminUserController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'role' => $request->role,
-            'country' => $request->country,
-            'region' => $request->region,
-            'ward' => $request->ward,
-            'street' => $request->street,
+            'country_id' => $request->country_id,
+            'region_id' => $request->region_id,
+            'district_id' => $request->district_id,
+            'ward_id' => $request->ward_id,
+            'street_id' => $request->street_id,
             'leader_id' => $request->leader_id, 
+            'category_id' => $request->category_id,
         ]);
 
         return redirect()->route('admin.users.index')->with('success', 'User created successfully.');
@@ -63,8 +71,14 @@ class AdminUserController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(User $user)
+    public function show($userId)
     {
+        $user = User::with(['country', 'region', 'district', 'ward', 'street'])->find($userId);
+
+        if (!$user) {
+            abort(404); 
+        }
+
         return view('admin.users.show', compact('user'));
     }
 
@@ -73,8 +87,10 @@ class AdminUserController extends Controller
      */
     public function edit(User $user)
     {
-        $leaders = Leader::all(); 
-        return view('admin.users.edit', compact('user', 'leaders'));
+        $leaders = Leader::all();
+        $categories = Category::all();
+        $countries = Country::all();
+        return view('admin.users.edit', compact('user', 'leaders', 'categories', 'countries'));
     }
 
     /**
@@ -87,23 +103,27 @@ class AdminUserController extends Controller
             'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
             'password' => 'nullable|string|confirmed',
             'role' => 'required|in:citizen,leader,admin',
-            'country' => 'nullable|string|max:255',
-            'region' => 'nullable|string|max:255',
-            'ward' => 'nullable|string|max:255',
-            'street' => 'nullable|string|max:255',
+            'country_id' => 'nullable',
+            'region_id' => 'nullable',
+            'district_id' => 'nullable',
+            'ward_id' => 'nullable',
+            'street_id' => 'nullable',
             'leader_id' => 'nullable|exists:leaders,id',
+            'category_id' => 'nullable|exists:categories,id',
         ]);
 
         $user->update([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => $request->password ? Hash::make($request->password) : $user->password,
+            'password' => Hash::make($request->password),
             'role' => $request->role,
-            'country' => $request->country,
-            'region' => $request->region,
-            'ward' => $request->ward,
-            'street' => $request->street,
-            'leader_id' => $request->leader_id,
+            'country_id' => $request->country_id,
+            'region_id' => $request->region_id,
+            'district_id' => $request->district_id,
+            'ward_id' => $request->ward_id,
+            'street_id' => $request->street_id,
+            'leader_id' => $request->leader_id, 
+            'category_id' => $request->category_id,
         ]);
 
         return redirect()->route('admin.users.index')->with('success', 'User updated successfully.');

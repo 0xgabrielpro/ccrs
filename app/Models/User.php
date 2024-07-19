@@ -27,10 +27,11 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
-        'country',
-        'region',
-        'ward',
-        'street',
+        'country_id',
+        'region_id',
+        'district_id',
+        'ward_id',
+        'street_id',
         'role',
         'email',
         'password',
@@ -75,5 +76,30 @@ class User extends Authenticatable
     public function issues()
     {
         return $this->hasMany(Issue::class, 'sealed_by');
+    }
+
+    public function country()
+    {
+        return $this->belongsTo(Country::class);
+    }
+
+    public function region()
+    {
+        return $this->belongsTo(Region::class);
+    }
+
+    public function district()
+    {
+        return $this->belongsTo(District::class);
+    }
+    
+    public function ward()
+    {
+        return $this->belongsTo(Ward::class);
+    }
+
+    public function street()
+    {
+        return $this->belongsTo(Street::class);
     }
 }

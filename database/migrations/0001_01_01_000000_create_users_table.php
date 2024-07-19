@@ -18,10 +18,11 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->enum('role', ['citizen', 'leader', 'admin']);
-            $table->string('country')->nullable();
-            $table->string('region')->nullable();
-            $table->string('ward')->nullable();
-            $table->string('street')->nullable();
+            $table->string('country_id')->nullable();
+            $table->string('region_id')->nullable();
+            $table->string('district_id')->nullable();
+            $table->string('ward_id')->nullable();
+            $table->string('street_id')->nullable();
             $table->foreignId('leader_id')->nullable()->constrained('leaders')->onDelete('set null');
             $table->rememberToken();
             $table->foreignId('current_team_id')->nullable();
