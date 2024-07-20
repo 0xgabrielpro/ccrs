@@ -8,94 +8,179 @@
                     </div>
                     <div class="bg-white shadow overflow-hidden sm:rounded-lg p-6">
                         @foreach ($filteredData as $scope => $data)
-                            <div class="my-6">
-                                <h2 class="text-xl font-semibold capitalize">{{ $scope }} Issues</h2>
-                                <div style="height: 400px;">
-                                    <canvas id="chart-{{ $scope }}"></canvas>
-                                </div>
-                                @push('scripts')
-                                <script>
-                                    document.addEventListener('DOMContentLoaded', function () {
-                                        const ctx{{ ucfirst($scope) }} = document.getElementById('chart-{{ $scope }}').getContext('2d');
-                                        const labels = {!! json_encode(array_keys($data)) !!};
-                                        const rawData = {!! json_encode($data) !!};
-                                        const datasets = [];
-                                        const statusTypes = ['open', 'closed', 'inprogress', 'resolved'];
+                            @if ($scope === 'categories')
+                            @if (auth()->user()->leader_id == 9 || auth()->user()->leader_id == 8 || auth()->user()->leader_id == 7)
+                                    <div class="my-6">
+                                        <h2 class="text-xl font-semibold capitalize">Categories Issues</h2>
+                                        <div style="height: 400px;">
+                                            <canvas id="chart-{{ $scope }}"></canvas>
+                                        </div>
+                                        @push('scripts')
+                                        <script>
+                                            document.addEventListener('DOMContentLoaded', function () {
+                                                const ctxCategories = document.getElementById('chart-{{ $scope }}').getContext('2d');
+                                                const rawData = {!! json_encode($data) !!};
+                                                const labels = Object.keys(rawData);
+                                                const statusTypes = ['open', 'closed', 'inprogress', 'resolved'];
 
-                                        statusTypes.forEach(status => {
-                                            const dataset = {
-                                                label: status.charAt(0).toUpperCase() + status.slice(1),
-                                                data: labels.map(label => {
-                                                    return rawData[label] && rawData[label][status] ? rawData[label][status] : 0;
-                                                }),
-                                                backgroundColor: getBackgroundColor(status),
-                                                borderColor: getBorderColor(status),
-                                                borderWidth: 1
-                                            };
-                                            datasets.push(dataset);
-                                        });
+                                                const datasets = statusTypes.map(status => {
+                                                    return {
+                                                        label: status.charAt(0).toUpperCase() + status.slice(1),
+                                                        data: labels.map(label => rawData[label][status] || 0),
+                                                        backgroundColor: getBackgroundColor(status),
+                                                        borderColor: getBorderColor(status),
+                                                        borderWidth: 1
+                                                    };
+                                                });
 
-                                        new Chart(ctx{{ ucfirst($scope) }}, {
-                                            type: 'bar',
-                                            data: {
-                                                labels: labels,
-                                                datasets: datasets
-                                            },
-                                            options: {
-                                                responsive: true,
-                                                maintainAspectRatio: false,
-                                                plugins: {
-                                                    tooltip: {
-                                                        callbacks: {
-                                                            label: function(tooltipItem) {
-                                                                const label = tooltipItem.dataset.label;
-                                                                const value = tooltipItem.raw;
-                                                                return `${label}: ${value}`;
+                                                new Chart(ctxCategories, {
+                                                    type: 'bar', // Using bar chart to handle multiple categories
+                                                    data: {
+                                                        labels: labels,
+                                                        datasets: datasets
+                                                    },
+                                                    options: {
+                                                        responsive: true,
+                                                        maintainAspectRatio: false,
+                                                        plugins: {
+                                                            tooltip: {
+                                                                callbacks: {
+                                                                    label: function(tooltipItem) {
+                                                                        return `${tooltipItem.dataset.label}: ${tooltipItem.raw}`;
+                                                                    }
+                                                                }
+                                                            }
+                                                        },
+                                                        scales: {
+                                                            x: {
+                                                                stacked: true,
+                                                                title: {
+                                                                    display: true,
+                                                                    text: 'Category'
+                                                                }
+                                                            },
+                                                            y: {
+                                                                stacked: true,
+                                                                title: {
+                                                                    display: true,
+                                                                    text: 'Count'
+                                                                },
+                                                                beginAtZero: true
                                                             }
                                                         }
                                                     }
+                                                });
+
+                                                function getBackgroundColor(status) {
+                                                    switch (status) {
+                                                        case 'open': return 'rgba(54, 162, 235, 0.8)';
+                                                        case 'closed': return 'rgba(255, 99, 132, 0.8)';
+                                                        case 'inprogress': return 'rgba(75, 192, 192, 0.8)';
+                                                        case 'resolved': return 'rgba(153, 102, 255, 0.8)';
+                                                        default: return 'rgba(255, 159, 64, 0.8)';
+                                                    }
+                                                }
+
+                                                function getBorderColor(status) {
+                                                    switch (status) {
+                                                        case 'open': return 'rgba(54, 162, 235, 1)';
+                                                        case 'closed': return 'rgba(255, 99, 132, 1)';
+                                                        case 'inprogress': return 'rgba(75, 192, 192, 1)';
+                                                        case 'resolved': return 'rgba(153, 102, 255, 1)';
+                                                        default: return 'rgba(255, 159, 64, 1)';
+                                                    }
+                                                }
+                                            });
+                                        </script>
+                                        @endpush
+                                    </div>
+                                @endif
+                            @else
+                                <div class="my-6">
+                                    <h2 class="text-xl font-semibold capitalize">{{ str_replace('_', ' ', $scope) }} Issues</h2>
+                                    <div style="height: 400px;">
+                                        <canvas id="chart-{{ $scope }}"></canvas>
+                                    </div>
+                                    @push('scripts')
+                                    <script>
+                                        document.addEventListener('DOMContentLoaded', function () {
+                                            const ctx{{ ucfirst($scope) }} = document.getElementById('chart-{{ $scope }}').getContext('2d');
+                                            const rawData = {!! json_encode($data) !!};
+                                            const labels = Object.keys(rawData);
+                                            const statusTypes = ['open', 'closed', 'inprogress', 'resolved'];
+
+                                            const datasets = statusTypes.map(status => {
+                                                return {
+                                                    label: status.charAt(0).toUpperCase() + status.slice(1),
+                                                    data: labels.map(label => rawData[label][status] || 0),
+                                                    backgroundColor: getBackgroundColor(status),
+                                                    borderColor: getBorderColor(status),
+                                                    borderWidth: 1
+                                                };
+                                            });
+
+                                            new Chart(ctx{{ ucfirst($scope) }}, {
+                                                type: 'bar',
+                                                data: {
+                                                    labels: labels,
+                                                    datasets: datasets
                                                 },
-                                                scales: {
-                                                    x: {
-                                                        title: {
-                                                            display: true,
-                                                            text: 'Location'
+                                                options: {
+                                                    responsive: true,
+                                                    maintainAspectRatio: false,
+                                                    plugins: {
+                                                        tooltip: {
+                                                            callbacks: {
+                                                                label: function(tooltipItem) {
+                                                                    return `${tooltipItem.dataset.label}: ${tooltipItem.raw}`;
+                                                                }
+                                                            }
                                                         }
                                                     },
-                                                    y: {
-                                                        title: {
-                                                            display: true,
-                                                            text: 'Count'
+                                                    scales: {
+                                                        x: {
+                                                            stacked: true,
+                                                            title: {
+                                                                display: true,
+                                                                text: '{{ str_replace('_', ' ', $scope) }}'
+                                                            }
                                                         },
-                                                        beginAtZero: true
+                                                        y: {
+                                                            stacked: true,
+                                                            title: {
+                                                                display: true,
+                                                                text: 'Count'
+                                                            },
+                                                            beginAtZero: true
+                                                        }
                                                     }
+                                                }
+                                            });
+
+                                            function getBackgroundColor(status) {
+                                                switch (status) {
+                                                    case 'open': return 'rgba(54, 162, 235, 0.8)';
+                                                    case 'closed': return 'rgba(255, 99, 132, 0.8)';
+                                                    case 'inprogress': return 'rgba(75, 192, 192, 0.8)';
+                                                    case 'resolved': return 'rgba(153, 102, 255, 0.8)';
+                                                    default: return 'rgba(255, 159, 64, 0.8)';
+                                                }
+                                            }
+
+                                            function getBorderColor(status) {
+                                                switch (status) {
+                                                    case 'open': return 'rgba(54, 162, 235, 1)';
+                                                    case 'closed': return 'rgba(255, 99, 132, 1)';
+                                                    case 'inprogress': return 'rgba(75, 192, 192, 1)';
+                                                    case 'resolved': return 'rgba(153, 102, 255, 1)';
+                                                    default: return 'rgba(255, 159, 64, 1)';
                                                 }
                                             }
                                         });
-
-                                        function getBackgroundColor(status) {
-                                            switch (status) {
-                                                case 'open': return 'rgba(54, 162, 235, 0.8)';
-                                                case 'closed': return 'rgba(255, 99, 132, 0.8)';
-                                                case 'inprogress': return 'rgba(75, 192, 192, 0.8)';
-                                                case 'resolved': return 'rgba(153, 102, 255, 0.8)';
-                                                default: return 'rgba(255, 159, 64, 0.8)';
-                                            }
-                                        }
-
-                                        function getBorderColor(status) {
-                                            switch (status) {
-                                                case 'open': return 'rgba(54, 162, 235, 1)';
-                                                case 'closed': return 'rgba(255, 99, 132, 1)';
-                                                case 'inprogress': return 'rgba(75, 192, 192, 1)';
-                                                case 'resolved': return 'rgba(153, 102, 255, 1)';
-                                                default: return 'rgba(255, 159, 64, 1)';
-                                            }
-                                        }
-                                    });
-                                </script>
-                                @endpush
-                            </div>
+                                    </script>
+                                    @endpush
+                                </div>
+                            @endif
                         @endforeach
                     </div>
                 </div>
