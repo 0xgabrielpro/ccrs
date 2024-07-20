@@ -4,6 +4,11 @@ namespace App\Http\Controllers;
 use App\Models\Issue;
 use App\Models\Category;
 use App\Models\IssueChat;
+use App\Models\Country;
+use App\Models\Region;
+use App\Models\District;
+use App\Models\Ward;
+use App\Models\Street;
 use App\Models\User;
 use App\Models\Leader;
 use Illuminate\Http\Request;
@@ -227,46 +232,129 @@ class IssueController extends Controller
         $issues = Issue::whereIn('id', $matchingIssueIds)->get();
 
         return view('issues.myarea', compact('issues'));
+    } 
+
+    function getLeaderLevel($leaderId) {
+        switch ($leaderId) {
+            case 1:
+                return 'street';
+            case 2:
+                return 'ward';
+            case 3:
+            case 4:
+            case 5:
+                return 'district';
+            case 6:
+                return 'region';
+            case 7:
+                return 'category';
+            case 8:
+                return 'all_category';
+            case 9:
+                return 'national';
+            default:
+                return 'unknown';
+        }
     }
 
     public function showInsights()
     {
         $leaderId = auth()->user()->id;
+        $leaderLevel = $this->getLeaderLevel(auth()->user()->leader_id);
+    
         $matchingIssueIds = UserHelper::findMatchingIssuesForLeader($leaderId);
+        $matchingAnonIssueIds = UserHelper::findMatchingAnonIssuesForLeader($leaderId);
     
         $issues = Issue::whereIn('id', $matchingIssueIds)->get();
+        $anonIssues = AnonIssue::whereIn('id', $matchingAnonIssueIds)->get();
     
-        $statusCounts = [
-            'open' => 0,
-            'closed' => 0,
-            'inprogress' => 0,
-            'resolved' => 0,
-        ];
+        $allIssues = $issues->merge($anonIssues);
+    
+        $levels = ['country_id', 'region_id', 'district_id', 'ward_id', 'street_id'];
+    
+        $scopeData = [];
+    
+        foreach ($levels as $level) {
+            $scopeData[$this->removeIdSuffix($level)] = $this->countIssuesByLevel($allIssues, $level);
+        }
+    
+        $scopes = $this->getScopesForLeaderLevel(auth()->user()->leader_id);
+        $filteredData = array_intersect_key($scopeData, array_flip($scopes));
+        // dd($filteredData);
+        return view('issues.insights', compact('filteredData', 'scopes'));
+    }
+    
+    private function countIssuesByLevel($issues, $level)
+    {
+        $counts = [];
     
         foreach ($issues as $issue) {
-            switch ($issue->status) {
-                case 'open':
-                    $statusCounts['open']++;
-                    break;
-                case 'closed':
-                    $statusCounts['closed']++;
-                    break;
-                case 'inprogress':
-                    $statusCounts['inprogress']++;
-                    break;
-                case 'resolved':
-                    $statusCounts['resolved']++;
-                    break;
-                default:
-                    break;
+            $key = $issue->$level;
+            if ($key) {
+                $name = $this->getLocationName($key, $level);
+                if (!isset($counts[$name])) {
+                    $counts[$name] = [
+                        'open' => 0,
+                        'closed' => 0,
+                        'inprogress' => 0,
+                        'resolved' => 0,
+                    ];
+                }
+                $counts[$name][$issue->status]++;
             }
         }
     
-        $statusLabels = array_keys($statusCounts);
-        $statusData = array_values($statusCounts);
-    
-        return view('issues.insights', compact('statusLabels', 'statusData'));
+        return $counts;
     }
     
+    private function getLocationName($id, $level)
+    {
+        switch ($level) {
+            case 'country_id':
+                return Country::find($id)->name;
+            case 'region_id':
+                return Region::find($id)->name;
+            case 'district_id':
+                return District::find($id)->name;
+            case 'ward_id':
+                return Ward::find($id)->name;
+            case 'street_id':
+                return Street::find($id)->name;
+            default:
+                return 'Unknown';
+        }
+    }
+    
+
+    private function getScopesForLeaderLevel($leaderLevel)
+    {
+        switch ($leaderLevel) {
+            case 1:
+                return ['street'];
+            case 2:
+                return ['ward', 'street'];
+            case 3:
+            case 4:
+            case 5:
+                return ['district', 'ward', 'street'];
+            case 6:
+                return ['region', 'district', 'ward', 'street'];
+            case 7:
+                return ['category'];
+            case 8:
+                return ['all_category'];
+            case 9:
+                return ['country', 'region', 'district', 'ward', 'street'];
+            default:
+                return ['total'];
+        }
+    }
+
+    function removeIdSuffix($word) {
+        if (substr($word, -3) === '_id') {
+            return substr($word, 0, -3);
+        }
+        return $word;
+    }
     
 }

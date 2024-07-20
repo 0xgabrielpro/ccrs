@@ -23,7 +23,7 @@
                     
                     <div id="results">
                         <div id="anon-issues" class="bg-white shadow overflow-hidden sm:rounded-lg mb-6">
-                            <h2 class="text-xl font-semibold mb-4">Public Anonymous Issues</h2>
+                            <h2 class="text-xl font-semibold mb-4">Anonymous Issues</h2>
                             <ul class="divide-y divide-gray-200">
                                 @forelse($anonIssues as $anonIssue)
                                     <li class="px-4 py-4 sm:px-6">

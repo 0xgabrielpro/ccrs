@@ -7,82 +7,99 @@
                         <h1 class="text-3xl font-bold">Issue Insights</h1>
                     </div>
                     <div class="bg-white shadow overflow-hidden sm:rounded-lg p-6">
-                        <div style="height: 500px;">
-                            <canvas id="statusChart"></canvas>
-                        </div>
+                        @foreach ($filteredData as $scope => $data)
+                            <div class="my-6">
+                                <h2 class="text-xl font-semibold capitalize">{{ $scope }} Issues</h2>
+                                <div style="height: 400px;">
+                                    <canvas id="chart-{{ $scope }}"></canvas>
+                                </div>
+                                @push('scripts')
+                                <script>
+                                    document.addEventListener('DOMContentLoaded', function () {
+                                        const ctx{{ ucfirst($scope) }} = document.getElementById('chart-{{ $scope }}').getContext('2d');
+                                        const labels = {!! json_encode(array_keys($data)) !!};
+                                        const rawData = {!! json_encode($data) !!};
+                                        const datasets = [];
+                                        const statusTypes = ['open', 'closed', 'inprogress', 'resolved'];
+
+                                        statusTypes.forEach(status => {
+                                            const dataset = {
+                                                label: status.charAt(0).toUpperCase() + status.slice(1),
+                                                data: labels.map(label => {
+                                                    return rawData[label] && rawData[label][status] ? rawData[label][status] : 0;
+                                                }),
+                                                backgroundColor: getBackgroundColor(status),
+                                                borderColor: getBorderColor(status),
+                                                borderWidth: 1
+                                            };
+                                            datasets.push(dataset);
+                                        });
+
+                                        new Chart(ctx{{ ucfirst($scope) }}, {
+                                            type: 'bar',
+                                            data: {
+                                                labels: labels,
+                                                datasets: datasets
+                                            },
+                                            options: {
+                                                responsive: true,
+                                                maintainAspectRatio: false,
+                                                plugins: {
+                                                    tooltip: {
+                                                        callbacks: {
+                                                            label: function(tooltipItem) {
+                                                                const label = tooltipItem.dataset.label;
+                                                                const value = tooltipItem.raw;
+                                                                return `${label}: ${value}`;
+                                                            }
+                                                        }
+                                                    }
+                                                },
+                                                scales: {
+                                                    x: {
+                                                        title: {
+                                                            display: true,
+                                                            text: 'Location'
+                                                        }
+                                                    },
+                                                    y: {
+                                                        title: {
+                                                            display: true,
+                                                            text: 'Count'
+                                                        },
+                                                        beginAtZero: true
+                                                    }
+                                                }
+                                            }
+                                        });
+
+                                        function getBackgroundColor(status) {
+                                            switch (status) {
+                                                case 'open': return 'rgba(54, 162, 235, 0.8)';
+                                                case 'closed': return 'rgba(255, 99, 132, 0.8)';
+                                                case 'inprogress': return 'rgba(75, 192, 192, 0.8)';
+                                                case 'resolved': return 'rgba(153, 102, 255, 0.8)';
+                                                default: return 'rgba(255, 159, 64, 0.8)';
+                                            }
+                                        }
+
+                                        function getBorderColor(status) {
+                                            switch (status) {
+                                                case 'open': return 'rgba(54, 162, 235, 1)';
+                                                case 'closed': return 'rgba(255, 99, 132, 1)';
+                                                case 'inprogress': return 'rgba(75, 192, 192, 1)';
+                                                case 'resolved': return 'rgba(153, 102, 255, 1)';
+                                                default: return 'rgba(255, 159, 64, 1)';
+                                            }
+                                        }
+                                    });
+                                </script>
+                                @endpush
+                            </div>
+                        @endforeach
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
-    @push('scripts')
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
-        const statusLabels = @json($statusLabels);
-        const statusData = @json($statusData);
-
-        function createChart(ctx, labels, data) {
-            new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: 'Issues by Status',
-                        data: data,
-                        backgroundColor: [
-                            'rgba(54, 162, 235, 0.8)',
-                            'rgba(255, 99, 132, 0.8)',
-                            'rgba(75, 192, 192, 0.8)',
-                            'rgba(153, 102, 255, 0.8)',
-                            'rgba(255, 159, 64, 0.8)'
-                        ],
-                        borderColor: [
-                            'rgba(54, 162, 235, 1)',
-                            'rgba(255, 99, 132, 1)',
-                            'rgba(75, 192, 192, 1)',
-                            'rgba(153, 102, 255, 1)',
-                            'rgba(255, 159, 64, 1)'
-                        ],
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false, 
-                    plugins: {
-                        tooltip: {
-                            callbacks: {
-                                label: function(tooltipItem) {
-                                    const issueCount = tooltipItem.raw;
-                                    return ` ${tooltipItem.dataset.label}: ${issueCount} issues`;
-                                }
-                            }
-                        }
-                    },
-                    scales: {
-                        x: {
-                            beginAtZero: true,
-                            title: {
-                                display: true,
-                                text: 'status'
-                            }
-                        },
-                        y: {
-                            beginAtZero: true,
-                            title: {
-                                display: true,
-                                text: 'Status'
-                            }
-                        }
-                    }
-                }
-            });
-        }
-
-        const ctx = document.getElementById('statusChart').getContext('2d');
-        ctx.canvas.height = 400; 
-        createChart(ctx, statusLabels, statusData);
-    </script>
-    @endpush
 </x-app-layout>

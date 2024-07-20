@@ -4,6 +4,8 @@ namespace App\Helpers;
 
 use App\Models\User;
 use App\Models\Issue;
+use App\Models\AnonIssue;
+
 
 class UserHelper
 {
@@ -128,6 +130,33 @@ class UserHelper
         }
 
         return $matchingIssueIds;
+    }
+
+    public static function findMatchingAnonIssuesForLeader($leaderId)
+    {
+        $matchingAnonIssueIds = [];
+        $leaderRole = 'leader';
+        $leaderPosition = self::getLeaderPosition($leaderId);
+        $anonIssues = AnonIssue::all();
+
+        foreach ($anonIssues as $anonIssue) {
+            $matchingUserId = self::findMatchingByUserLocation(
+                $anonIssue->country_id,
+                $anonIssue->region_id,
+                $anonIssue->district_id,
+                $anonIssue->ward_id,
+                $anonIssue->street_id,
+                $leaderRole,
+                $leaderPosition,
+                $anonIssue->category_id
+            );
+
+            if ($matchingUserId == $leaderId) {
+                $matchingAnonIssueIds[] = $anonIssue->id;
+            }
+        }
+
+        return $matchingAnonIssueIds;
     }
 
 }
