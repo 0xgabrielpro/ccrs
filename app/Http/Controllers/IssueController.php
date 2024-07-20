@@ -8,13 +8,63 @@ use App\Models\User;
 use App\Models\Leader;
 use Illuminate\Http\Request;
 use App\Helpers\UserHelper;
+use App\Models\AnonIssue;
 
 class IssueController extends Controller
 {
-    public function index()
+    // public function index()
+    // {
+    //     $issues = Issue::with('category')->get();
+    //     return view('issues.index', compact('issues'));
+    // }
+
+    public function index(Request $request)
     {
-        $issues = Issue::with('category')->get();
-        return view('issues.index', compact('issues'));
+        $search = $request->input('search');
+
+        $issues = Issue::query();
+        $anonIssues = AnonIssue::query();
+
+        if ($search) {
+            $issues->where('title', 'LIKE', "%{$search}%");
+            $anonIssues->where('title', 'LIKE', "%{$search}%");
+
+            $anonIssuesResult = $anonIssues->get();
+
+            // If no title match found, search by code ignoring visibility
+            if ($anonIssuesResult->isEmpty()) {
+                $anonIssues = AnonIssue::where('code', $search)->get();
+            } else {
+                $anonIssues = $anonIssues->where('visibility', true)->get();
+            }
+
+            $issues = $issues->get();
+        } else {
+            $issues = $issues->get();
+            $anonIssues = $anonIssues->where('visibility', true)->get();
+        }
+
+        return view('issues.index', compact('issues', 'anonIssues'));
+    }
+
+    public function search(Request $request)
+    {
+        $search = $request->input('search');
+        $issues = Issue::query();
+        $anonIssues = AnonIssue::query();
+
+        if ($search) {
+            $issues->where('title', 'LIKE', "%{$search}%");
+            $anonIssues->where(function ($query) use ($search) {
+                $query->where('title', 'LIKE', "%{$search}%")
+                      ->orWhere('code', $search);
+            });
+        }
+
+        $issues = $issues->get();
+        $anonIssues = $anonIssues->get();
+
+        return response()->json(['issues' => $issues, 'anonIssues' => $anonIssues]);
     }
 
     public function create()

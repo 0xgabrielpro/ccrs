@@ -5,83 +5,156 @@
         <x-text-input id="title" name="title" type="text" class="mt-1 block w-full" :value="old('title', $anonIssue?->title)" autocomplete="title" placeholder="Title"/>
         <x-input-error class="mt-2" for="title"/>
     </div>
+    
     <div>
         <x-input-label for="description" :value="__('Description')"/>
-        <x-text-input id="description" name="description" type="text" class="mt-1 block w-full" :value="old('description', $anonIssue?->description)" autocomplete="description" placeholder="Description"/>
+        <textarea id="description" name="description" class="mt-1 block w-full" autocomplete="description" placeholder="Description">{{ old('description', $anonIssue?->description) }}</textarea>
         <x-input-error class="mt-2" for="description"/>
     </div>
+
     <div>
-        <x-input-label for="status" :value="__('Status')"/>
-        <x-text-input id="status" name="status" type="text" class="mt-1 block w-full" :value="old('status', $anonIssue?->status)" autocomplete="status" placeholder="Status"/>
-        <x-input-error class="mt-2" for="status"/>
+        <x-input-label for="country" :value="__('Country')"/>
+        <select id="country" name="country_id" class="mt-1 block w-full form-select" required>
+            <option value="">{{ __('Select Country') }}</option>
+        </select>
+        <x-input-error class="mt-2" for="country"/>
     </div>
+
     <div>
-        <x-input-label for="country_id" :value="__('Country Id')"/>
-        <x-text-input id="country_id" name="country_id" type="text" class="mt-1 block w-full" :value="old('country_id', $anonIssue?->country_id)" autocomplete="country_id" placeholder="Country Id"/>
-        <x-input-error class="mt-2" for="country_id"/>
+        <x-input-label for="region" :value="__('Region')"/>
+        <select id="region" name="region_id" class="mt-1 block w-full form-select" required disabled>
+            <option value="">{{ __('Select Region') }}</option>
+        </select>
+        <x-input-error class="mt-2" for="region"/>
     </div>
+
     <div>
-        <x-input-label for="region_id" :value="__('Region Id')"/>
-        <x-text-input id="region_id" name="region_id" type="text" class="mt-1 block w-full" :value="old('region_id', $anonIssue?->region_id)" autocomplete="region_id" placeholder="Region Id"/>
-        <x-input-error class="mt-2" for="region_id"/>
+        <x-input-label for="district" :value="__('District')"/>
+        <select id="district" name="district_id" class="mt-1 block w-full form-select" required disabled>
+            <option value="">{{ __('Select District') }}</option>
+        </select>
+        <x-input-error class="mt-2" for="district"/>
     </div>
+
     <div>
-        <x-input-label for="district_id" :value="__('District Id')"/>
-        <x-text-input id="district_id" name="district_id" type="text" class="mt-1 block w-full" :value="old('district_id', $anonIssue?->district_id)" autocomplete="district_id" placeholder="District Id"/>
-        <x-input-error class="mt-2" for="district_id"/>
+        <x-input-label for="ward" :value="__('Ward')"/>
+        <select id="ward" name="ward_id" class="mt-1 block w-full form-select" required disabled>
+            <option value="">{{ __('Select Ward') }}</option>
+        </select>
+        <x-input-error class="mt-2" for="ward"/>
     </div>
+
     <div>
-        <x-input-label for="ward_id" :value="__('Ward Id')"/>
-        <x-text-input id="ward_id" name="ward_id" type="text" class="mt-1 block w-full" :value="old('ward_id', $anonIssue?->ward_id)" autocomplete="ward_id" placeholder="Ward Id"/>
-        <x-input-error class="mt-2" for="ward_id"/>
+        <x-input-label for="street" :value="__('Street')"/>
+        <select id="street" name="street_id" class="mt-1 block w-full form-select" required disabled>
+            <option value="">{{ __('Select Street') }}</option>
+        </select>
+        <x-input-error class="mt-2" for="street"/>
     </div>
+    
     <div>
-        <x-input-label for="street_id" :value="__('Street Id')"/>
-        <x-text-input id="street_id" name="street_id" type="text" class="mt-1 block w-full" :value="old('street_id', $anonIssue?->street_id)" autocomplete="street_id" placeholder="Street Id"/>
-        <x-input-error class="mt-2" for="street_id"/>
-    </div>
-    <div>
-        <x-input-label for="category_id" :value="__('Category Id')"/>
-        <x-text-input id="category_id" name="category_id" type="text" class="mt-1 block w-full" :value="old('category_id', $anonIssue?->category_id)" autocomplete="category_id" placeholder="Category Id"/>
+        <x-input-label for="category_id" :value="__('Category')"/>
+        <select id="category_id" name="category_id" class="mt-1 block w-full form-select">
+            <!-- Populate with categories from the database -->
+            <option value="">{{ __('Select Category') }}</option>
+            @foreach($categories as $category)
+                <option value="{{ $category->id }}" {{ old('category_id', $anonIssue?->category_id) == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
+            @endforeach
+        </select>
         <x-input-error class="mt-2" for="category_id"/>
     </div>
+
     <div>
-        <x-input-label for="file_path" :value="__('File Path')"/>
-        <x-text-input id="file_path" name="file_path" type="text" class="mt-1 block w-full" :value="old('file_path', $anonIssue?->file_path)" autocomplete="file_path" placeholder="File Path"/>
+        <x-input-label for="file_path" :value="__('Upload File')"/>
+        <input id="file_path" name="file_path" type="file" class="mt-1 block w-full">
         <x-input-error class="mt-2" for="file_path"/>
-    </div>
-    <div>
-        <x-input-label for="code" :value="__('Code')"/>
-        <x-text-input id="code" name="code" type="text" class="mt-1 block w-full" :value="old('code', $anonIssue?->code)" autocomplete="code" placeholder="Code"/>
-        <x-input-error class="mt-2" for="code"/>
-    </div>
-    <div>
-        <x-input-label for="citizen_satisfied" :value="__('Citizen Satisfied')"/>
-        <x-text-input id="citizen_satisfied" name="citizen_satisfied" type="text" class="mt-1 block w-full" :value="old('citizen_satisfied', $anonIssue?->citizen_satisfied)" autocomplete="citizen_satisfied" placeholder="Citizen Satisfied"/>
-        <x-input-error class="mt-2" for="citizen_satisfied"/>
-    </div>
-    <div>
-        <x-input-label for="sealed_by" :value="__('Sealed By')"/>
-        <x-text-input id="sealed_by" name="sealed_by" type="text" class="mt-1 block w-full" :value="old('sealed_by', $anonIssue?->sealed_by)" autocomplete="sealed_by" placeholder="Sealed By"/>
-        <x-input-error class="mt-2" for="sealed_by"/>
-    </div>
-    <div>
-        <x-input-label for="to_user_id" :value="__('To User Id')"/>
-        <x-text-input id="to_user_id" name="to_user_id" type="text" class="mt-1 block w-full" :value="old('to_user_id', $anonIssue?->to_user_id)" autocomplete="to_user_id" placeholder="To User Id"/>
-        <x-input-error class="mt-2" for="to_user_id"/>
-    </div>
-    <div>
-        <x-input-label for="read" :value="__('Read')"/>
-        <x-text-input id="read" name="read" type="text" class="mt-1 block w-full" :value="old('read', $anonIssue?->read)" autocomplete="read" placeholder="Read"/>
-        <x-input-error class="mt-2" for="read"/>
-    </div>
-    <div>
-        <x-input-label for="visibility" :value="__('Visibility')"/>
-        <x-text-input id="visibility" name="visibility" type="text" class="mt-1 block w-full" :value="old('visibility', $anonIssue?->visibility)" autocomplete="visibility" placeholder="Visibility"/>
-        <x-input-error class="mt-2" for="visibility"/>
     </div>
 
     <div class="flex items-center gap-4">
         <x-primary-button>Submit</x-primary-button>
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const countrySelect = document.getElementById('country');
+        const regionSelect = document.getElementById('region');
+        const districtSelect = document.getElementById('district');
+        const wardSelect = document.getElementById('ward');
+        const streetSelect = document.getElementById('street');
+
+        // Fetch countries initially
+        fetch('/api2/countries')
+            .then(response => response.json())
+            .then(data => {
+                countrySelect.innerHTML = '<option value="">{{ __('Select Country') }}</option>';
+                data.forEach(country => {
+                    countrySelect.innerHTML += `<option value="${country.id}">${country.name}</option>`;
+                });
+            });
+
+        countrySelect.addEventListener('change', function () {
+            fetchRegions(this.value);
+        });
+
+        regionSelect.addEventListener('change', function () {
+            fetchDistricts(this.value);
+        });
+
+        districtSelect.addEventListener('change', function () {
+            fetchWards(this.value);
+        });
+
+        wardSelect.addEventListener('change', function () {
+            fetchStreets(this.value);
+        });
+
+        function fetchRegions(countryId) {
+            fetch(`/api2/regions?country_id=${countryId}`)
+                .then(response => response.json())
+                .then(data => {
+                    regionSelect.innerHTML = '<option value="">{{ __('Select Region') }}</option>';
+                    data.forEach(region => {
+                        regionSelect.innerHTML += `<option value="${region.id}">${region.name}</option>`;
+                    });
+                    regionSelect.disabled = false;
+                });
+        }
+
+        function fetchDistricts(regionId) {
+            fetch(`/api2/districts?region_id=${regionId}`)
+                .then(response => response.json())
+                .then(data => {
+                    districtSelect.innerHTML = '<option value="">{{ __('Select District') }}</option>';
+                    data.forEach(district => {
+                        districtSelect.innerHTML += `<option value="${district.id}">${district.name}</option>`;
+                    });
+                    districtSelect.disabled = false;
+                });
+        }
+
+        function fetchWards(districtId) {
+            fetch(`/api2/wards?district_id=${districtId}`)
+                .then(response => response.json())
+                .then(data => {
+                    wardSelect.innerHTML = '<option value="">{{ __('Select Ward') }}</option>';
+                    data.forEach(ward => {
+                        wardSelect.innerHTML += `<option value="${ward.id}">${ward.name}</option>`;
+                    });
+                    wardSelect.disabled = false;
+                });
+        }
+
+        function fetchStreets(wardId) {
+            fetch(`/api2/streets?ward_id=${wardId}`)
+                .then(response => response.json())
+                .then(data => {
+                    streetSelect.innerHTML = '<option value="">{{ __('Select Street') }}</option>';
+                    data.forEach(street => {
+                        streetSelect.innerHTML += `<option value="${street.id}">${street.name}</option>`;
+                    });
+                    streetSelect.disabled = false;
+                });
+        }
+    });
+</script>

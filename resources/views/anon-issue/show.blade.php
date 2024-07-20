@@ -1,100 +1,75 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ $anonIssue->name ?? __('Show') . " " . __('Anon Issue') }}
+        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+            {{ __('Issue Details') }}
         </h2>
     </x-slot>
 
     <div class="py-12">
-        <div class="max-w-full mx-auto sm:px-6 lg:px-8 space-y-6">
-            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                <div class="w-full">
-                    <div class="sm:flex sm:items-center">
-                        <div class="sm:flex-auto">
-                            <h1 class="text-base font-semibold leading-6 text-gray-900">{{ __('Show') }} Anon Issue</h1>
-                            <p class="mt-2 text-sm text-gray-700">Details of {{ __('Anon Issue') }}.</p>
-                        </div>
-                        <div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
-                            <a type="button" href="{{ route('anon-issues.index') }}" class="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Back</a>
-                        </div>
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="p-6 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
+                    <div class="mb-6 flex items-center justify-between">
+                        <h1 class="text-3xl font-bold">{{ $anonIssue->title }}</h1>
+                        <a href="{{ route('anon-issues.index') }}" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700">Back</a>
                     </div>
 
-                    <div class="flow-root">
-                        <div class="mt-8 overflow-x-auto">
-                            <div class="inline-block min-w-full py-2 align-middle">
-                                <div class="mt-6 border-t border-gray-100">
-                                    <dl class="divide-y divide-gray-100">
-                                        
-                                <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                                    <dt class="text-sm font-medium leading-6 text-gray-900">Title</dt>
-                                    <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{{ $anonIssue->title }}</dd>
-                                </div>
-                                <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                                    <dt class="text-sm font-medium leading-6 text-gray-900">Description</dt>
-                                    <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{{ $anonIssue->description }}</dd>
-                                </div>
-                                <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                                    <dt class="text-sm font-medium leading-6 text-gray-900">Status</dt>
-                                    <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{{ $anonIssue->status }}</dd>
-                                </div>
-                                <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                                    <dt class="text-sm font-medium leading-6 text-gray-900">Country Id</dt>
-                                    <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{{ $anonIssue->country_id }}</dd>
-                                </div>
-                                <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                                    <dt class="text-sm font-medium leading-6 text-gray-900">Region Id</dt>
-                                    <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{{ $anonIssue->region_id }}</dd>
-                                </div>
-                                <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                                    <dt class="text-sm font-medium leading-6 text-gray-900">District Id</dt>
-                                    <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{{ $anonIssue->district_id }}</dd>
-                                </div>
-                                <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                                    <dt class="text-sm font-medium leading-6 text-gray-900">Ward Id</dt>
-                                    <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{{ $anonIssue->ward_id }}</dd>
-                                </div>
-                                <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                                    <dt class="text-sm font-medium leading-6 text-gray-900">Street Id</dt>
-                                    <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{{ $anonIssue->street_id }}</dd>
-                                </div>
-                                <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                                    <dt class="text-sm font-medium leading-6 text-gray-900">Category Id</dt>
-                                    <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{{ $anonIssue->category_id }}</dd>
-                                </div>
-                                <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                                    <dt class="text-sm font-medium leading-6 text-gray-900">File Path</dt>
-                                    <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{{ $anonIssue->file_path }}</dd>
-                                </div>
-                                <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                                    <dt class="text-sm font-medium leading-6 text-gray-900">Code</dt>
-                                    <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{{ $anonIssue->code }}</dd>
-                                </div>
-                                <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                                    <dt class="text-sm font-medium leading-6 text-gray-900">Citizen Satisfied</dt>
-                                    <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{{ $anonIssue->citizen_satisfied }}</dd>
-                                </div>
-                                <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                                    <dt class="text-sm font-medium leading-6 text-gray-900">Sealed By</dt>
-                                    <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{{ $anonIssue->sealed_by }}</dd>
-                                </div>
-                                <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                                    <dt class="text-sm font-medium leading-6 text-gray-900">To User Id</dt>
-                                    <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{{ $anonIssue->to_user_id }}</dd>
-                                </div>
-                                <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                                    <dt class="text-sm font-medium leading-6 text-gray-900">Read</dt>
-                                    <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{{ $anonIssue->read }}</dd>
-                                </div>
-                                <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                                    <dt class="text-sm font-medium leading-6 text-gray-900">Visibility</dt>
-                                    <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{{ $anonIssue->visibility }}</dd>
-                                </div>
-
-                                    </dl>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="mb-4">
+                        <span class="inline-block px-4 py-2 bg-{{ $anonIssue->status == 'open' ? 'green' : ($anonIssue->status == 'inprogress' ? 'yellow' : ($anonIssue->status == 'resolved' ? 'blue' : 'red')) }}-500 text-white font-bold rounded-lg shadow-sm">{{ ucfirst($anonIssue->status) }}</span>
                     </div>
+                    <div class="mb-4">
+                        <p class="text-gray-700 dark:text-gray-200">{{ $anonIssue->description }}</p>
+                    </div>
+
+                    @if($anonIssue->file_path)
+                        <div class="mt-4">
+                            <h2 class="text-xl font-semibold mb-2">Evidence File</h2>
+                            <a href="{{ asset('storage/' . $anonIssue->file_path) }}" class="text-blue-500 hover:underline" target="_blank">View/Download File</a>
+                        </div>
+                    @endif
+
+                    @if(auth()->check() && auth()->user()->role == 'leader')
+                        <div class="mt-4">
+                            <h4 class="font-bold text-lg text-gray-800 dark:text-gray-200">Change Status:</h4>
+                            <form action="{{ route('anon-issues.update_status', $anonIssue->id) }}" method="POST">
+                                @csrf
+                                @method('PUT')
+                                <select name="status" class="px-4 py-2 rounded-lg shadow-sm border-gray-300 focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                                    <option value="open" {{ $anonIssue->status == 'open' ? 'selected' : '' }}>Open</option>
+                                    <option value="inprogress" {{ $anonIssue->status == 'inprogress' ? 'selected' : '' }}>In Progress</option>
+                                    <option value="resolved" {{ $anonIssue->status == 'resolved' ? 'selected' : '' }}>Resolved</option>
+                                    <option value="closed" {{ $anonIssue->status == 'closed' ? 'selected' : '' }}>Closed</option>
+                                </select>
+                                <button type="submit" class="ml-2 px-4 py-2 bg-blue-500 text-white font-bold rounded-lg shadow-sm hover:bg-blue-700">Update Status</button>
+                            </form>
+                        </div>
+
+                        <div class="mt-4">
+                            <h4 class="font-bold text-lg text-gray-800 dark:text-gray-200">Forward Issue:</h4>
+                            <form action="{{ route('anon-issues.forward', $anonIssue->id) }}" method="POST">
+                                @csrf
+                                <select name="forward_to" class="px-4 py-2 rounded-lg shadow-sm border-gray-300 focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                                    @foreach($leaders as $leader)
+                                        <option value="{{ $leader->id }}" {{ $anonIssue->forward_to == $leader->id ? 'selected' : '' }}>{{ $leader->name }}</option>
+                                    @endforeach
+                                </select>
+                                <button type="submit" class="ml-2 px-4 py-2 bg-green-500 text-white font-bold rounded-lg shadow-sm hover:bg-green-700">Forward</button>
+                            </form>
+                        </div>
+
+                        <div class="mt-4">
+                            <h4 class="font-bold text-lg text-gray-800 dark:text-gray-200">Change Visibility:</h4>
+                            <form action="{{ route('anon-issues.update_visibility', $anonIssue->id) }}" method="POST">
+                                @csrf
+                                @method('PUT')
+                                <select name="visibility" class="px-4 py-2 rounded-lg shadow-sm border-gray-300 focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                                    <option value="1" {{ $anonIssue->visibility ? 'selected' : '' }}>Visible</option>
+                                    <option value="0" {{ !$anonIssue->visibility ? 'selected' : '' }}>Hidden</option>
+                                </select>
+                                <button type="submit" class="ml-2 px-4 py-2 bg-blue-500 text-white font-bold rounded-lg shadow-sm hover:bg-blue-700">Update Visibility</button>
+                            </form>
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>

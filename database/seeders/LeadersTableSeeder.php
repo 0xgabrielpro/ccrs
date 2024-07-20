@@ -17,8 +17,8 @@ class LeadersTableSeeder extends Seeder
         $leaders = [
             'Mwenyekiti wa Kijiji/Mtaa',
             'Diwani wa Kata',
-            'Mkurugenzi wa Halmashauri',
             'Mwenyekiti wa Halmashauri/Meya',
+            'Mkurugenzi wa Halmashauri',
             'Mkuu wa Wilaya',
             'Mkuu wa Mkoa',
             'Waziri',

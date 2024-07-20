@@ -53,8 +53,15 @@ Route::post('issues/{issue}/forward', [IssueController::class, 'forward'])->name
 Route::get('evidence/download/{file}', [EvidenceController::class, 'download'])->name('evidence.download');
 Route::put('/issues/{issue}/update_status', [IssueController::class, 'updateStatus'])->name('issues.update_status');
 
+Route::get('/issues/search', [IssueController::class, 'search'])->name('issues.search');
+
 Route::resource('anon-issues', AnonIssueController::class);
 Route::resource('issue_chats', IssueChatController::class);
+Route::middleware(['auth', 'role:leader'])->group(function () {
+    Route::put('anon-issues/{anon_issue}/update-status', [AnonIssueController::class, 'updateStatus'])->name('anon-issues.update_status');
+    Route::post('anon-issues/{anon_issue}/forward', [AnonIssueController::class, 'forward'])->name('anon-issues.forward');
+    Route::put('anon-issues/{anon_issue}/update-visibility', [AnonIssueController::class, 'updateVisibility'])->name('anon-issues.update_visibility');
+});
 
 Route::get('/leaderboard', [LeaderboardController::class, 'index'])->name('leaderboard.index');
 

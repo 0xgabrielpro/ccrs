@@ -23,29 +23,40 @@ class UserHelper
         $sampleUser = User::findOrFail($userId);
 
         $query = User::where('role', $role)
-                     ->where('leader_id', $position);
+                      ->where('leader_id', $position);
 
         switch ($position) {
             case 1:
-                $query->where('country', $sampleUser->country)
-                      ->where('region', $sampleUser->region)
-                      ->where('ward', $sampleUser->ward)
-                      ->where('street', $sampleUser->street);
+                $query->where('country_id', $sampleUser->country_id)
+                      ->where('region_id', $sampleUser->region_id)
+		              ->where('district_id', $sampleUser->district_id)
+                      ->where('ward_id', $sampleUser->ward_id)
+                      ->where('street_id', $sampleUser->street_id);
                 break;
             case 2:
+                $query->where('country_id', $sampleUser->country_id)
+                      ->where('region_id', $sampleUser->region_id)
+                      ->where('district_id', $sampleUser->district_id)
+                      ->where('ward', $sampleUser->ward_id);
+                break;
+	    
             case 3:
             case 4:
             case 5:
+                $query->where('country_id', $sampleUser->country_id)
+                      ->where('region_id', $sampleUser->region_id)
+                      ->where('district_id', $sampleUser->district_id);
+                break; 
             case 6:
-                $query->where('country', $sampleUser->country)
-                      ->where('region', $sampleUser->region)
-                      ->where('ward', $sampleUser->ward);
+                $query->where('country_id', $sampleUser->country_id)
+                      ->where('region_id', $sampleUser->region_id);
                 break;
             case 7:
                 $query->where('category_id', $category_id);
                 break;
+	        case 8:
             case 9:
-                $query->where('country', $sampleUser->country);
+                $query->where('country_id', $sampleUser->country_id);
                 break;
         }
 
@@ -54,7 +65,7 @@ class UserHelper
         return $matchingUser ? $matchingUser->id : null;
     }
 
-    public static function findMatchingByUserLocation($country, $region, $ward, $street, $role, $position, $category_id)
+    public static function findMatchingByUserLocation($country_id, $region_id, $district_id, $ward_id, $street_id, $role, $position, $category_id)
     {
         
         $query = User::where('role', $role)
@@ -62,25 +73,36 @@ class UserHelper
 
         switch ($position) {
             case 1:
-                $query->where('country', $country)
-                      ->where('region', $region)
-                      ->where('ward', $ward)
-                      ->where('street', $street);
+                $query->where('country_id', $country_id)
+                      ->where('region_id', $region_id)
+		              ->where('district_id', $district_id)
+                      ->where('ward_id', $ward_id)
+                      ->where('street_id', $street_id);
                 break;
             case 2:
+                $query->where('country_id', $country_id)
+                      ->where('region_id', $region_id)
+                      ->where('district_id', $district_id)
+                      ->where('ward', $ward_id);
+                break;
+	    
             case 3:
             case 4:
             case 5:
+                $query->where('country_id', $country_id)
+                      ->where('region_id', $region_id)
+                      ->where('district_id', $district_id);
+                break; 
             case 6:
-                $query->where('country', $country)
-                      ->where('region', $region)
-                      ->where('ward', $ward);
+                $query->where('country_id', $country_id)
+                      ->where('region_id', $region_id);
                 break;
             case 7:
                 $query->where('category_id', $category_id);
                 break;
+	        case 8:
             case 9:
-                $query->where('country', $country);
+                $query->where('country_id', $country_id);
                 break;
         }
 
@@ -88,6 +110,7 @@ class UserHelper
 
         return $matchingUser ? $matchingUser->id : null;
     }
+
 
     public static function findMatchingIssuesForLeader($leaderId)
     {

@@ -16,44 +16,83 @@
                         </div>
 
                         <form method="GET" action="{{ route('issues.index') }}" class="flex w-full max-w-md">
-                            <input type="text" name="search" placeholder="Search issues..." class="w-full border border-gray-300 rounded-l px-4 py-2 dark:text-gray-800">
+                            <input type="text" name="search" placeholder="Search issues..." class="w-full border border-gray-300 rounded-l px-4 py-2 dark:text-gray-800" value="{{ request('search') }}">
                             <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-r hover:bg-blue-700">Search</button>
                         </form>
-                        
                     </div>
-                    <div class="bg-white shadow overflow-hidden sm:rounded-lg">
-                        <ul class="divide-y divide-gray-200">
-                            @forelse($issues as $issue)
-                                <li class="px-4 py-4 sm:px-6">
-                                    <a href="{{ route('issues.show', $issue) }}" class="block hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg p-4">
-                                        <div class="flex items-center justify-between">
-                                            <div class="text-sm font-medium text-indigo-600 truncate">
-                                                {{ $issue->title }}
-                                            </div>
-                                            <div class="ml-2 flex-shrink-0 flex">
-                                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ $issue->status == 'open' ? 'bg-green-100 text-green-800' : ($issue->status == 'inprogress' ? 'bg-yellow-100 text-yellow-800' : ($issue->status == 'resolved' ? 'bg-blue-100 text-blue-800' : 'bg-red-100 text-red-800')) }}">
-                                                    {{ $issue->status }}
-                                                </span>
-                                            </div>
-                                        </div>
-                                        <div class="mt-2 sm:flex sm:justify-between">
-                                            <div class="sm:flex">
-                                                <div class="mr-6 flex items-center text-sm text-gray-500">
-                                                    <p>{{ $issue->description }}</p>
+                    
+                    <div id="results">
+                        <div id="anon-issues" class="bg-white shadow overflow-hidden sm:rounded-lg mb-6">
+                            <h2 class="text-xl font-semibold mb-4">Public Anonymous Issues</h2>
+                            <ul class="divide-y divide-gray-200">
+                                @forelse($anonIssues as $anonIssue)
+                                    <li class="px-4 py-4 sm:px-6">
+                                        <a href="{{ route('anon-issues.show', $anonIssue->id) }}" class="block hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg p-4">
+                                            <div class="flex items-center justify-between">
+                                                <div class="text-sm font-medium text-indigo-600 truncate">
+                                                    {{ $anonIssue->title }}
+                                                </div>
+                                                <div class="ml-2 flex-shrink-0 flex">
+                                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ $anonIssue->status == 'open' ? 'bg-green-100 text-green-800' : ($anonIssue->status == 'inprogress' ? 'bg-yellow-100 text-yellow-800' : ($anonIssue->status == 'resolved' ? 'bg-blue-100 text-blue-800' : 'bg-red-100 text-red-800')) }}">
+                                                        {{ $anonIssue->status }}
+                                                    </span>
                                                 </div>
                                             </div>
-                                            <div class="mt-2 flex items-center text-sm text-gray-500 sm:mt-0">
-                                                <p>{{ $issue->created_at->diffForHumans() }}</p>
+                                            <div class="mt-2 sm:flex sm:justify-between">
+                                                <div class="sm:flex">
+                                                    <div class="mr-6 flex items-center text-sm text-gray-500">
+                                                        <p>{{ $anonIssue->description }}</p>
+                                                    </div>
+                                                </div>
+                                                <div class="mt-2 flex items-center text-sm text-gray-500 sm:mt-0">
+                                                    <p>{{ $anonIssue->created_at->diffForHumans() }}</p>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </a>
-                                </li>
-                            @empty
-                                <li class="px-4 py-4 sm:px-6">
-                                    <div class="text-sm text-gray-500">No issues found.</div>
-                                </li>
-                            @endforelse
-                        </ul>
+                                        </a>
+                                    </li>
+                                @empty
+                                    <li class="px-4 py-4 sm:px-6">
+                                        <div class="text-sm text-gray-500">No public anonymous issues found.</div>
+                                    </li>
+                                @endforelse
+                            </ul>
+                        </div>
+
+                        <div id="issues" class="bg-white shadow overflow-hidden sm:rounded-lg">
+                            <h2 class="text-xl font-semibold mb-4">All Issues</h2>
+                            <ul class="divide-y divide-gray-200">
+                                @forelse($issues as $issue)
+                                    <li class="px-4 py-4 sm:px-6">
+                                        <a href="{{ route('issues.show', $issue->id) }}" class="block hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg p-4">
+                                            <div class="flex items-center justify-between">
+                                                <div class="text-sm font-medium text-indigo-600 truncate">
+                                                    {{ $issue->title }}
+                                                </div>
+                                                <div class="ml-2 flex-shrink-0 flex">
+                                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ $issue->status == 'open' ? 'bg-green-100 text-green-800' : ($issue->status == 'inprogress' ? 'bg-yellow-100 text-yellow-800' : ($issue->status == 'resolved' ? 'bg-blue-100 text-blue-800' : 'bg-red-100 text-red-800')) }}">
+                                                        {{ $issue->status }}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="mt-2 sm:flex sm:justify-between">
+                                                <div class="sm:flex">
+                                                    <div class="mr-6 flex items-center text-sm text-gray-500">
+                                                        <p>{{ $issue->description }}</p>
+                                                    </div>
+                                                </div>
+                                                <div class="mt-2 flex items-center text-sm text-gray-500 sm:mt-0">
+                                                    <p>{{ $issue->created_at->diffForHumans() }}</p>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </li>
+                                @empty
+                                    <li class="px-4 py-4 sm:px-6">
+                                        <div class="text-sm text-gray-500">No issues found.</div>
+                                    </li>
+                                @endforelse
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>

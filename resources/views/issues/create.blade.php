@@ -32,7 +32,7 @@
                     </div>
                     <input type="hidden" name="status" value="open">
                     <input type="hidden" name="visibility" value="1">
-                    <input type="hidden" name="to_user_id" value="{{ \App\Helpers\UserHelper::findMatchingUserId(auth()->user()->id, 'leader', 1) }}">
+                    <input type="hidden" name="to_user_id" value="{{ \App\Helpers\UserHelper::findMatchingUserId(auth()->user()->id, 'leader', 1, $category->id) }}">
 
                 </div>
                 <div class="bg-gray-50 px-6 py-4">
