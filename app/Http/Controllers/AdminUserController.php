@@ -112,19 +112,23 @@ class AdminUserController extends Controller
             'category_id' => 'nullable|exists:categories,id',
         ]);
 
-        $user->update([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'role' => $request->role,
-            'country_id' => $request->country_id,
-            'region_id' => $request->region_id,
-            'district_id' => $request->district_id,
-            'ward_id' => $request->ward_id,
-            'street_id' => $request->street_id,
-            'leader_id' => $request->leader_id, 
-            'category_id' => $request->category_id,
-        ]);
+        // Filter out empty values
+        $data = array_filter($request->only([
+            'name', 'email', 'password', 'role',
+            'country_id', 'region_id', 'district_id',
+            'ward_id', 'street_id', 'leader_id', 'category_id'
+        ]), function ($value) {
+            return $value !== null && $value !== '';
+        });
+
+        // Hash the password if it's provided
+        if (!empty($data['password'])) {
+            $data['password'] = Hash::make($data['password']);
+        } else {
+            unset($data['password']);
+        }
+
+        $user->update($data);
 
         return redirect()->route('admin.users.index')->with('success', 'User updated successfully.');
     }

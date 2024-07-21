@@ -73,7 +73,7 @@
 
     <div class="mb-4">
         <x-input-label for="region_id" :value="__('Region')" />
-        <select id="region_id" name="region_id" class="block mt-1 w-full form-select" required onchange="fetchDistricts(this.value)" disabled>
+        <select id="region_id" name="region_id" class="block mt-1 w-full form-select" required onchange="fetchDistricts(this.value)">
             <option value="">{{ __('Select Region') }}</option>
         </select>
         <x-input-error for="region_id" class="mt-2" />
@@ -81,7 +81,7 @@
 
     <div class="mb-4">
         <x-input-label for="district_id" :value="__('District')" />
-        <select id="district_id" name="district_id" class="block mt-1 w-full form-select" required onchange="fetchWards(this.value)" disabled>
+        <select id="district_id" name="district_id" class="block mt-1 w-full form-select" required onchange="fetchWards(this.value)">
             <option value="">{{ __('Select District') }}</option>
         </select>
         <x-input-error for="district_id" class="mt-2" />
@@ -89,7 +89,7 @@
 
     <div class="mb-4">
         <x-input-label for="ward_id" :value="__('Ward')" />
-        <select id="ward_id" name="ward_id" class="block mt-1 w-full form-select" required onchange="fetchStreets(this.value)" disabled>
+        <select id="ward_id" name="ward_id" class="block mt-1 w-full form-select" required onchange="fetchStreets(this.value)">
             <option value="">{{ __('Select Ward') }}</option>
         </select>
         <x-input-error for="ward_id" class="mt-2" />
@@ -97,7 +97,7 @@
 
     <div class="mb-4">
         <x-input-label for="street_id" :value="__('Street')" />
-        <select id="street_id" name="street_id" class="block mt-1 w-full form-select" required disabled>
+        <select id="street_id" name="street_id" class="block mt-1 w-full form-select" required>
             <option value="">{{ __('Select Street') }}</option>
         </select>
         <x-input-error for="street_id" class="mt-2" />
@@ -144,12 +144,11 @@
         const districtSelect = document.getElementById('district_id');
         const wardSelect = document.getElementById('ward_id');
         const streetSelect = document.getElementById('street_id');
-        const userCountry = "{{ old('country', $user->country ?? '') }}";
-        const userRegion = "{{ old('region', $user->region ?? '') }}";
-        const userDistrict = "{{ old('district', $user->district ?? '') }}";
-        const userWard = "{{ old('ward', $user->ward ?? '') }}";
-        const userStreet = "{{ old('street', $user->street ?? '') }}";
-        console.log(userCountry);
+        const userCountry = "{{ old('country_id', $user->country_id ?? '') }}";
+        const userRegion = "{{ old('region_id', $user->region_id ?? '') }}";
+        const userDistrict = "{{ old('district_id', $user->district_id ?? '') }}";
+        const userWard = "{{ old('ward_id', $user->ward_id ?? '') }}";
+        const userStreet = "{{ old('street_id', $user->street_id ?? '') }}";
 
         if (userCountry) {
             fetchRegions(userCountry, function() {
@@ -186,69 +185,97 @@
         wardSelect.addEventListener('change', function () {
             fetchStreets(this.value);
         });
-
-        function fetchRegions(countryId, callback) {
-            fetch(`/api2/regions?country_id=${countryId}`)
-                .then(response => response.json())
-                .then(data => {
-                    regionSelect.innerHTML = '<option value="">{{ __('Select Region') }}</option>';
-                    data.forEach(region => {
-                        regionSelect.innerHTML += `<option value="${region.id}">${region.name}</option>`;
-                    });
-                    regionSelect.disabled = false;
-                    if (userRegion) {
-                        regionSelect.value = userRegion;
-                    }
-                    if (callback) callback();
-                });
-        }
-
-        function fetchDistricts(regionId, callback) {
-            fetch(`/api2/districts?region_id=${regionId}`)
-                .then(response => response.json())
-                .then(data => {
-                    districtSelect.innerHTML = '<option value="">{{ __('Select District') }}</option>';
-                    data.forEach(district => {
-                        districtSelect.innerHTML += `<option value="${district.id}">${district.name}</option>`;
-                    });
-                    districtSelect.disabled = false;
-                    if (userDistrict) {
-                        districtSelect.value = userDistrict;
-                    }
-                    if (callback) callback();
-                });
-        }
-
-        function fetchWards(districtId, callback) {
-            fetch(`/api2/wards?district_id=${districtId}`)
-                .then(response => response.json())
-                .then(data => {
-                    wardSelect.innerHTML = '<option value="">{{ __('Select Ward') }}</option>';
-                    data.forEach(ward => {
-                        wardSelect.innerHTML += `<option value="${ward.id}">${ward.name}</option>`;
-                    });
-                    wardSelect.disabled = false;
-                    if (userWard) {
-                        wardSelect.value = userWard;
-                    }
-                    if (callback) callback();
-                });
-        }
-
-        function fetchStreets(wardId, callback) {
-            fetch(`/api2/streets?ward_id=${wardId}`)
-                .then(response => response.json())
-                .then(data => {
-                    streetSelect.innerHTML = '<option value="">{{ __('Select Street') }}</option>';
-                    data.forEach(street => {
-                        streetSelect.innerHTML += `<option value="${street.id}">${street.name}</option>`;
-                    });
-                    streetSelect.disabled = false;
-                    if (userStreet) {
-                        streetSelect.value = userStreet;
-                    }
-                    if (callback) callback();
-                });
-        }
     });
+
+    function fetchRegions(countryId, callback) {
+        if (!countryId) return;
+
+        axios.get(`/api2/regions?country_id=${countryId}`)
+            .then(response => {
+                const regionSelect = document.getElementById('region_id');
+                regionSelect.innerHTML = '<option value="">{{ __('Select Region') }}</option>';
+                response.data.forEach(region => {
+                    const option = document.createElement('option');
+                    option.value = region.id;
+                    option.textContent = region.name;
+                    if (region.id == "{{ old('region_id', $user->region_id ?? '') }}") {
+                        option.selected = true;
+                    }
+                    regionSelect.appendChild(option);
+                });
+                if (callback) callback();
+            })
+            .catch(error => {
+                console.error('Error fetching regions:', error);
+            });
+    }
+
+    function fetchDistricts(regionId, callback) {
+        if (!regionId) return;
+
+        axios.get(`/api2/districts?region_id=${regionId}`)
+            .then(response => {
+                const districtSelect = document.getElementById('district_id');
+                districtSelect.innerHTML = '<option value="">{{ __('Select District') }}</option>';
+                response.data.forEach(district => {
+                    const option = document.createElement('option');
+                    option.value = district.id;
+                    option.textContent = district.name;
+                    if (district.id == "{{ old('district_id', $user->district_id ?? '') }}") {
+                        option.selected = true;
+                    }
+                    districtSelect.appendChild(option);
+                });
+                if (callback) callback();
+            })
+            .catch(error => {
+                console.error('Error fetching districts:', error);
+            });
+    }
+
+    function fetchWards(districtId, callback) {
+        if (!districtId) return;
+
+        axios.get(`/api2/wards?district_id=${districtId}`)
+            .then(response => {
+                const wardSelect = document.getElementById('ward_id');
+                wardSelect.innerHTML = '<option value="">{{ __('Select Ward') }}</option>';
+                response.data.forEach(ward => {
+                    const option = document.createElement('option');
+                    option.value = ward.id;
+                    option.textContent = ward.name;
+                    if (ward.id == "{{ old('ward_id', $user->ward_id ?? '') }}") {
+                        option.selected = true;
+                    }
+                    wardSelect.appendChild(option);
+                });
+                if (callback) callback();
+            })
+            .catch(error => {
+                console.error('Error fetching wards:', error);
+            });
+    }
+
+    function fetchStreets(wardId, callback) {
+        if (!wardId) return;
+
+        axios.get(`/api2/streets?ward_id=${wardId}`)
+            .then(response => {
+                const streetSelect = document.getElementById('street_id');
+                streetSelect.innerHTML = '<option value="">{{ __('Select Street') }}</option>';
+                response.data.forEach(street => {
+                    const option = document.createElement('option');
+                    option.value = street.id;
+                    option.textContent = street.name;
+                    if (street.id == "{{ old('street_id', $user->street_id ?? '') }}") {
+                        option.selected = true;
+                    }
+                    streetSelect.appendChild(option);
+                });
+                if (callback) callback();
+            })
+            .catch(error => {
+                console.error('Error fetching streets:', error);
+            });
+    }
 </script>
