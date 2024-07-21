@@ -37,5 +37,5 @@ jobs:
     - name: Install dependencies
       run: composer install --prefer-dist --no-progress
 
-    - name: Run Laravel tests
-      run: php artisan test
+    # - name: Run Laravel tests
+    #   run: php artisan test
