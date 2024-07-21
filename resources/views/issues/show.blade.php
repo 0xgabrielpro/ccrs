@@ -37,38 +37,48 @@
                     <h4 class="font-bold text-lg text-gray-800 dark:text-gray-200">Chat Messages:</h4>
                     <div class="mt-4 space-y-4">
                         @foreach($issue->chats as $chat)
-                            <div class="{{ $chat->user_id == auth()->id() ? 'ml-auto' : '' }} flex items-start">
-                                <div class="bg-gray-200 p-3 rounded-lg max-w-2xl">
-                                    <div class="mb-2 flex items-center justify-between">
-                                        <div>
-                                            <span class="inline-block px-2 py-1 bg-{{ $chat->user_id == auth()->id() ? 'blue' : 'green' }}-200 text-{{ $chat->user_id == auth()->id() ? 'blue' : 'green' }}-800 font-semibold rounded">{{ $chat->user->name }}</span>
-                                            <span class="inline-block px-2 py-1 bg-{{ $chat->user_id == auth()->id() ? 'green' : 'blue' }}-200 text-{{ $chat->user_id == auth()->id() ? 'green' : 'blue' }}-800 font-semibold rounded ml-2">{{ $chat->user->role }}</span>
+                            <div class="{{ $chat->user_id == auth()->id() ? 'ml-auto' : '' }} flex items-start {{ $chat->user_id == auth()->id() ? 'flex-row-reverse' : '' }}">
+                                <div class="bg-gray-200 p-4 rounded-lg shadow-sm flex flex-col w-full max-w-md {{ $chat->user_id == auth()->id() ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800' }}">
+                                    <div class="relative">
+                                        <div class="absolute top-0 right-0 {{ $chat->user_id == auth()->id() ? 'pr-2' : 'pl-2' }} mt-1">
+                                            <span class="inline-block px-2 py-1 bg-{{ $chat->user_id == auth()->id() ? 'blue' : 'green' }}-200 text-{{ $chat->user_id == auth()->id() ? 'blue' : 'green' }}-800 font-semibold rounded">{{ $chat->user->role }}</span>
                                         </div>
-                                        <span class="text-xs text-gray-500 dark:text-gray-300">{{ $chat->created_at->diffForHumans() }}</span>
-                                    </div>
-                                    <p class="text-sm text-gray-700 dark:text-gray-200">
-                                        {{ $chat->msg }}
-                                    </p>
-                                    @if($chat->file_path)
-                                        @php
-                                            $extension = pathinfo($chat->file_path, PATHINFO_EXTENSION);
-                                            $isImage = in_array($extension, ['jpg', 'jpeg', 'png', 'gif']);
-                                        @endphp
-                                        @if($isImage)
+                                        <div class="flex-grow">
+                                            <div class="flex items-center justify-between">
+                                                <div class="flex items-center space-x-2">
+                                                    <span class="inline-block px-2 py-1 bg-{{ $chat->user_id == auth()->id() ? 'blue' : 'green' }}-200 text-{{ $chat->user_id == auth()->id() ? 'blue' : 'green' }}-800 font-semibold rounded">{{ $chat->user->name }}</span>
+                                                </div>
+                                            </div>
                                             <div class="mt-2">
-                                                <a href="{{ asset('storage/' . $chat->file_path) }}" target="_blank">
-                                                    <img src="{{ asset('storage/' . $chat->file_path) }}" alt="File" class="w-full h-auto rounded-lg shadow-md">
-                                                </a>
+                                                <p class="text-sm">
+                                                    {{ $chat->msg }}
+                                                </p>
+                                                @if($chat->file_path)
+                                                    @php
+                                                        $extension = pathinfo($chat->file_path, PATHINFO_EXTENSION);
+                                                        $isImage = in_array($extension, ['jpg', 'jpeg', 'png', 'gif']);
+                                                    @endphp
+                                                    <div class="mt-2">
+                                                        @if($isImage)
+                                                            <a href="{{ asset('storage/' . $chat->file_path) }}" target="_blank">
+                                                                <img src="{{ asset('storage/' . $chat->file_path) }}" alt="File" class="w-full h-auto rounded-lg shadow-md">
+                                                            </a>
+                                                        @else
+                                                            <div class="flex items-center space-x-2">
+                                                                <svg class="h-6 w-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                                                    <path fill-rule="evenodd" d="M4.293 3.293a1 1 0 0 1 1.414 0L10 7.586l4.293-4.293a1 1 0 1 1 1.414 1.414L11.414 9l4.293 4.293a1 1 0 1 1-1.414 1.414L10 10.414l-4.293 4.293a1 1 0 1 1-1.414-1.414L8.586 9 4.293 4.707a1 1 0 0 1 0-1.414z" clip-rule="evenodd"></path>
+                                                                </svg>
+                                                                <a href="{{ asset('storage/' . $chat->file_path) }}" class="text-blue-500 hover:underline truncate" target="_blank">{{ basename($chat->file_path) }}</a>
+                                                            </div>
+                                                        @endif
+                                                    </div>
+                                                @endif
                                             </div>
-                                        @else
-                                            <div class="mt-2 flex items-center space-x-2">
-                                                <svg class="h-6 w-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                                    <path fill-rule="evenodd" d="M4.293 3.293a1 1 0 0 1 1.414 0L10 7.586l4.293-4.293a1 1 0 1 1 1.414 1.414L11.414 9l4.293 4.293a1 1 0 1 1-1.414 1.414L10 10.414l-4.293 4.293a1 1 0 1 1-1.414-1.414L8.586 9 4.293 4.707a1 1 0 0 1 0-1.414z" clip-rule="evenodd"></path>
-                                                </svg>
-                                                <a href="{{ asset('storage/' . $chat->file_path) }}" class="text-blue-500 hover:underline truncate" target="_blank">{{ basename($chat->file_path) }}</a>
-                                            </div>
-                                        @endif
-                                    @endif
+                                        </div>
+                                        <div class="text-xs text-gray-500 dark:text-gray-300 mt-2 {{ $chat->user_id == auth()->id() ? 'text-right' : 'text-left' }}">
+                                            {{ $chat->created_at->diffForHumans() }}
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         @endforeach
