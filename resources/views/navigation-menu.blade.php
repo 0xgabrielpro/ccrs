@@ -27,11 +27,15 @@
                             <x-nav-link href="{{ route('leader.issues') }}" :active="request()->routeIs('leader.issues')">
                                 {{ __('Tagged Issues') }}
                             </x-nav-link>
-                            <x-nav-link href="{{ route('leader.myarea') }}" :active="request()->routeIs('leader.myarea')">
+                            <x-nav-link href="{{ route('leader.myarea') }}" :active="request()->routeIs('leader.myarea') }}">
                                 {{ __('My Area') }}
                             </x-nav-link>
-                            <x-nav-link href="{{ route('leader.insights') }}" :active="request()->routeIs('leader.insights')">
+                            <x-nav-link href="{{ route('leader.insights') }}" :active="request()->routeIs('leader.insights') }}">
                                 {{ __('Insights') }}
+                            </x-nav-link>
+                        @elseif (Auth::user()->role == 'citizen')
+                            <x-nav-link href="{{ route('citizen.myissues') }}" :active="request()->routeIs('citizen.myissues') }}">
+                                {{ __('My Issues') }}
                             </x-nav-link>
                         @endif
                     @endauth
@@ -177,6 +181,8 @@
                     <a href="{{ route('leader.issues') }}" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md">Tagged Issues</a>
                     <a href="{{ route('leader.myarea') }}" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md">My Area</a>
                     <a href="{{ route('leader.insights') }}" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md">Insights</a>
+                @elseif (Auth::user()->role == 'citizen')
+                    <a href="{{ route('citizen.myissues') }}" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md">My Issues</a>
                 @endif
             @endauth
         </div>
@@ -198,12 +204,12 @@
                 </div>
 
                 <div class="mt-3 space-y-1">
-                    <x-responsive-nav-link href="{{ route('profile.show') }}" :active="request()->routeIs('profile.show')">
+                    <x-responsive-nav-link href="{{ route('profile.show') }}" :active="request()->routeIs('profile.show') }}">
                         {{ __('Profile') }}
                     </x-responsive-nav-link>
 
                     @if (Laravel\Jetstream\Jetstream::hasApiFeatures())
-                        <x-responsive-nav-link href="{{ route('api-tokens.index') }}" :active="request()->routeIs('api-tokens.index')">
+                        <x-responsive-nav-link href="{{ route('api-tokens.index') }}" :active="request()->routeIs('api-tokens.index') }}">
                             {{ __('API Tokens') }}
                         </x-responsive-nav-link>
                     @endif
