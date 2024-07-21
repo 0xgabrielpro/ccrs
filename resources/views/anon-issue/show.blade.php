@@ -11,7 +11,7 @@
                 <div class="p-6 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
                     <div class="mb-6 flex items-center justify-between">
                         <h1 class="text-3xl font-bold">{{ $anonIssue->title }}</h1>
-                        <a href="{{ route('anon-issues.index') }}" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700">Back</a>
+                        <a href="{{ route('home') }}" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700">Back</a>
                     </div>
 
                     <div class="mb-4">

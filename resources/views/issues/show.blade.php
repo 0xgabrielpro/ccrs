@@ -150,6 +150,19 @@
                             <button type="submit" class="ml-2 px-4 py-2 bg-green-500 text-white font-bold rounded-lg shadow-sm hover:bg-green-700">Forward</button>
                         </form>
                     </div>
+
+                    <div class="mt-4">
+                        <h4 class="font-bold text-lg text-gray-800 dark:text-gray-200">Change Visibility:</h4>
+                        <form action="{{ route('issues.update_visibility', $issue->id) }}" method="POST">
+                            @csrf
+                            @method('PUT')
+                            <select name="visibility" class="px-4 py-2 rounded-lg shadow-sm border-gray-300 focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                                <option value="1" {{ $issue->visibility ? 'selected' : '' }}>Visible</option>
+                                <option value="0" {{ !$issue->visibility ? 'selected' : '' }}>Hidden</option>
+                            </select>
+                            <button type="submit" class="ml-2 px-4 py-2 bg-yellow-500 text-white font-bold rounded-lg shadow-sm hover:bg-yellow-700">Update Visibility</button>
+                        </form>
+                    </div>
                 @endif
             </div>
         </div>

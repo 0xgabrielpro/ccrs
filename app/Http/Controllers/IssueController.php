@@ -38,11 +38,15 @@ class IssueController extends Controller
                 $anonIssues = $anonIssues->where('visibility', true)->get();
             }
 
-            $issues = $issues->get();
+            $issues = $issues->where('visibility', true)->get();
         } else {
-            $issues = $issues->get();
+            $issues = $issues->where('visibility', true)->get();
             $anonIssues = $anonIssues->where('visibility', true)->get();
         }
+
+        // Order issues and anonIssues by created_at or updated_at in descending order
+        $issues = $issues->sortByDesc('created_at');
+        $anonIssues = $anonIssues->sortByDesc('created_at');
 
         return view('issues.index', compact('issues', 'anonIssues'));
     }
@@ -229,139 +233,138 @@ class IssueController extends Controller
         $leaderId = auth()->user()->id;
         $matchingIssueIds = UserHelper::findMatchingIssuesForLeader($leaderId);
         $matchingAnonIssueIds = UserHelper::findMatchingAnonIssuesForLeader($leaderId);
-    
-        $issues = Issue::whereIn('id', $matchingIssueIds)->get();
-        $anonIssues = AnonIssue::whereIn('id', $matchingAnonIssueIds)->get();
-    
+
+        $issues = Issue::whereIn('id', $matchingIssueIds)->get()->sortByDesc('created_at');
+        $anonIssues = AnonIssue::whereIn('id', $matchingAnonIssueIds)->get()->sortByDesc('created_at');
+
         return view('issues.myarea', compact('issues', 'anonIssues'));
     }
-    
 
 
     private function getLeaderLevel($leaderId)
-{
-    switch ($leaderId) {
-        case 1:
-            return 'street';
-        case 2:
-            return 'ward';
-        case 3:
-        case 4:
-        case 5:
-            return 'district';
-        case 6:
-            return 'region';
-        case 7:
-            return 'category';
-        case 8:
-            return 'all_category';
-        case 9:
-            return 'national';
-        default:
-            return 'unknown';
-    }
-}
-
-public function showInsights()
-{
-    $leaderId = auth()->user()->id;
-    $leaderLevel = $this->getLeaderLevel(auth()->user()->leader_id);
-
-    $matchingIssueIds = UserHelper::findMatchingIssuesForLeader($leaderId);
-    $matchingAnonIssueIds = UserHelper::findMatchingAnonIssuesForLeader($leaderId);
-
-    $issues = Issue::whereIn('id', $matchingIssueIds)->get();
-    $anonIssues = AnonIssue::whereIn('id', $matchingAnonIssueIds)->get();
-
-    $allIssues = $issues->merge($anonIssues);
-
-    $levels = ['country_id', 'region_id', 'district_id', 'ward_id', 'street_id'];
-    
-    $scopeData = [];
-    foreach ($levels as $level) {
-        $scopeData[$this->removeIdSuffix($level)] = $this->countIssuesByLevel($allIssues, $level);
-    }
-
-    // Handle categories separately
-    $categoryData = [];
-    if ($leaderLevel === 'category' || $leaderLevel === 'all_category' || $leaderLevel === 'national') {
-        $categoryData = $this->countIssuesByCategory($allIssues);
-    }
-
-    if ($leaderLevel === 'category') {
-        $userCategory = auth()->user()->category_id;
-        $categoryName = Category::find($userCategory)->name ?? 'Unknown';
-        $categoryData = [$categoryName => $categoryData[$categoryName] ?? ['open' => 0, 'closed' => 0, 'inprogress' => 0, 'resolved' => 0]];
-    }
-
-    // Only pass data relevant to the leader's scope
-    $scopes = $this->getScopesForLeaderLevel(auth()->user()->leader_id);
-    $filteredData = array_intersect_key($scopeData, array_flip($scopes));
-    if ($leaderLevel === 'all_category' || $leaderLevel === 'national' || $leaderLevel === 'category') {
-        $filteredData['categories'] = $categoryData;
-    }
-    // dd($filteredData);
-    return view('issues.insights', compact('filteredData', 'scopes'));
-}
-
-
-private function countIssuesByCategory($issues)
-{
-    $counts = [];
-
-    foreach ($issues as $issue) {
-        $key = $issue->category_id;
-        $name = Category::find($key)->name ?? 'Unknown';
-        if ($key) {
-            if (!isset($counts[$name])) {
-                $counts[$name] = ['open' => 0, 'closed' => 0, 'inprogress' => 0, 'resolved' => 0];
-            }
-            $counts[$name][$issue->status]++;
+    {
+        switch ($leaderId) {
+            case 1:
+                return 'street';
+            case 2:
+                return 'ward';
+            case 3:
+            case 4:
+            case 5:
+                return 'district';
+            case 6:
+                return 'region';
+            case 7:
+                return 'category';
+            case 8:
+                return 'all_category';
+            case 9:
+                return 'national';
+            default:
+                return 'unknown';
         }
     }
 
-    return $counts;
-}
+    public function showInsights()
+    {
+        $leaderId = auth()->user()->id;
+        $leaderLevel = $this->getLeaderLevel(auth()->user()->leader_id);
+
+        $matchingIssueIds = UserHelper::findMatchingIssuesForLeader($leaderId);
+        $matchingAnonIssueIds = UserHelper::findMatchingAnonIssuesForLeader($leaderId);
+
+        $issues = Issue::whereIn('id', $matchingIssueIds)->get();
+        $anonIssues = AnonIssue::whereIn('id', $matchingAnonIssueIds)->get();
+
+        $allIssues = $issues->merge($anonIssues);
+
+        $levels = ['country_id', 'region_id', 'district_id', 'ward_id', 'street_id'];
+        
+        $scopeData = [];
+        foreach ($levels as $level) {
+            $scopeData[$this->removeIdSuffix($level)] = $this->countIssuesByLevel($allIssues, $level);
+        }
+
+        // Handle categories separately
+        $categoryData = [];
+        if ($leaderLevel === 'category' || $leaderLevel === 'all_category' || $leaderLevel === 'national') {
+            $categoryData = $this->countIssuesByCategory($allIssues);
+        }
+
+        if ($leaderLevel === 'category') {
+            $userCategory = auth()->user()->category_id;
+            $categoryName = Category::find($userCategory)->name ?? 'Unknown';
+            $categoryData = [$categoryName => $categoryData[$categoryName] ?? ['open' => 0, 'closed' => 0, 'inprogress' => 0, 'resolved' => 0]];
+        }
+
+        // Only pass data relevant to the leader's scope
+        $scopes = $this->getScopesForLeaderLevel(auth()->user()->leader_id);
+        $filteredData = array_intersect_key($scopeData, array_flip($scopes));
+        if ($leaderLevel === 'all_category' || $leaderLevel === 'national' || $leaderLevel === 'category') {
+            $filteredData['categories'] = $categoryData;
+        }
+        // dd($filteredData);
+        return view('issues.insights', compact('filteredData', 'scopes'));
+    }
+
+
+    private function countIssuesByCategory($issues)
+    {
+        $counts = [];
+
+        foreach ($issues as $issue) {
+            $key = $issue->category_id;
+            $name = Category::find($key)->name ?? 'Unknown';
+            if ($key) {
+                if (!isset($counts[$name])) {
+                    $counts[$name] = ['open' => 0, 'closed' => 0, 'inprogress' => 0, 'resolved' => 0];
+                }
+                $counts[$name][$issue->status]++;
+            }
+        }
+
+        return $counts;
+    }
 
     
-private function countIssuesByLevel($issues, $level)
-{
-    $counts = [];
+    private function countIssuesByLevel($issues, $level)
+    {
+        $counts = [];
 
-    foreach ($issues as $issue) {
-        $key = $issue->$level;
-        $name = $this->getNameByLevel($level, $key);
-        if ($key) {
-            if (!isset($counts[$name])) {
-                $counts[$name] = ['open' => 0, 'closed' => 0, 'inprogress' => 0, 'resolved' => 0];
+        foreach ($issues as $issue) {
+            $key = $issue->$level;
+            $name = $this->getNameByLevel($level, $key);
+            if ($key) {
+                if (!isset($counts[$name])) {
+                    $counts[$name] = ['open' => 0, 'closed' => 0, 'inprogress' => 0, 'resolved' => 0];
+                }
+                $counts[$name][$issue->status]++;
             }
-            $counts[$name][$issue->status]++;
+        }
+
+        return $counts;
+    }
+    
+
+    private function getNameByLevel($level, $key)
+    {
+        switch ($level) {
+            case 'country_id':
+                return Country::find($key)->name ?? 'Unknown';
+            case 'region_id':
+                return Region::find($key)->name ?? 'Unknown';
+            case 'district_id':
+                return District::find($key)->name ?? 'Unknown';
+            case 'ward_id':
+                return Ward::find($key)->name ?? 'Unknown';
+            case 'street_id':
+                return Street::find($key)->name ?? 'Unknown';
+            case 'category_id':
+                return Category::find($key)->name ?? 'Unknown';
+            default:
+                return 'Unknown';
         }
     }
-
-    return $counts;
-}
-    
-
-private function getNameByLevel($level, $key)
-{
-    switch ($level) {
-        case 'country_id':
-            return Country::find($key)->name ?? 'Unknown';
-        case 'region_id':
-            return Region::find($key)->name ?? 'Unknown';
-        case 'district_id':
-            return District::find($key)->name ?? 'Unknown';
-        case 'ward_id':
-            return Ward::find($key)->name ?? 'Unknown';
-        case 'street_id':
-            return Street::find($key)->name ?? 'Unknown';
-        case 'category_id':
-            return Category::find($key)->name ?? 'Unknown';
-        default:
-            return 'Unknown';
-    }
-}
 
     private function getLocationName($id, $level)
     {
@@ -407,8 +410,26 @@ private function getNameByLevel($level, $key)
     }
 
     private function removeIdSuffix($level)
-{
-    return str_replace('_id', '', $level);
-}
+    {
+        return str_replace('_id', '', $level);
+    }
+
+    public function updateVisibility(Request $request, $id)
+    {
+        $issue = Issue::findOrFail($id);
+
+        if (auth()->user()->role !== 'leader') {
+            return redirect()->back()->with('error', 'Unauthorized action.');
+        }
+
+        $request->validate([
+            'visibility' => 'required|boolean',
+        ]);
+
+        $issue->visibility = $request->visibility;
+        $issue->save();
+
+        return redirect()->back()->with('success', 'Issue visibility updated successfully.');
+    }
     
 }

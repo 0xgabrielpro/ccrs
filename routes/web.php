@@ -16,7 +16,7 @@ Route::get('/welcome', function (){
     return view('welcome');
 });
 
-Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/', [IssueController::class, 'index'])->name('home');
 
 // Route::middleware([
 //     'auth:sanctum',
@@ -52,6 +52,7 @@ Route::post('issues/{issue}/rate', [IssueController::class, 'rate'])->name('issu
 Route::post('issues/{issue}/forward', [IssueController::class, 'forward'])->name('issues.forward');
 Route::get('evidence/download/{file}', [EvidenceController::class, 'download'])->name('evidence.download');
 Route::put('/issues/{issue}/update_status', [IssueController::class, 'updateStatus'])->name('issues.update_status');
+Route::put('/issues/{id}/update_visibility', [IssueController::class, 'updateVisibility'])->name('issues.update_visibility');
 
 Route::get('/issues/search', [IssueController::class, 'search'])->name('issues.search');
 
