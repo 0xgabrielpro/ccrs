@@ -6,6 +6,8 @@ use App\Models\User;
 use App\Models\Leader;
 use App\Models\Category;
 use App\Models\Country;
+use App\Models\Region;
+use App\Models\District;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
