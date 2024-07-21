@@ -90,8 +90,12 @@ class AdminUserController extends Controller
         $leaders = Leader::all();
         $categories = Category::all();
         $countries = Country::all();
-        return view('admin.users.edit', compact('user', 'leaders', 'categories', 'countries'));
+        $regions = Region::all();
+        $districts = District::all();
+    
+        return view('admin.users.edit', compact('user', 'leaders', 'categories', 'countries', 'regions', 'districts'));
     }
+    
 
     /**
      * Update the specified resource in storage.
