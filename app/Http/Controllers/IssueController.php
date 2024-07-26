@@ -270,43 +270,55 @@ class IssueController extends Controller
     {
         $leaderId = auth()->user()->id;
         $leaderLevel = $this->getLeaderLevel(auth()->user()->leader_id);
-
+    
+        // Get matching issue IDs for both normal and anonymous issues
         $matchingIssueIds = UserHelper::findMatchingIssuesForLeader($leaderId);
         $matchingAnonIssueIds = UserHelper::findMatchingAnonIssuesForLeader($leaderId);
-
+    
+        // Fetch issues from the database
         $issues = Issue::whereIn('id', $matchingIssueIds)->get();
         $anonIssues = AnonIssue::whereIn('id', $matchingAnonIssueIds)->get();
-
+    
+        // Merge all issues into a single collection
         $allIssues = $issues->merge($anonIssues);
-
+    
+        // Define hierarchical levels
         $levels = ['country_id', 'region_id', 'district_id', 'ward_id', 'street_id'];
         
+        // Initialize scope data array
         $scopeData = [];
         foreach ($levels as $level) {
             $scopeData[$this->removeIdSuffix($level)] = $this->countIssuesByLevel($allIssues, $level);
         }
-
-        // Handle categories separately
+    
+        // Initialize category data array
         $categoryData = [];
         if ($leaderLevel === 'category' || $leaderLevel === 'all_category' || $leaderLevel === 'national') {
             $categoryData = $this->countIssuesByCategory($allIssues);
         }
-
+    
+        // Filter category data if leader level is specific to a category
         if ($leaderLevel === 'category') {
             $userCategory = auth()->user()->category_id;
             $categoryName = Category::find($userCategory)->name ?? 'Unknown';
             $categoryData = [$categoryName => $categoryData[$categoryName] ?? ['open' => 0, 'closed' => 0, 'inprogress' => 0, 'resolved' => 0]];
         }
-
-        // Only pass data relevant to the leader's scope
+    
+        // Filter scope data based on the leader's scope
         $scopes = $this->getScopesForLeaderLevel(auth()->user()->leader_id);
         $filteredData = array_intersect_key($scopeData, array_flip($scopes));
         if ($leaderLevel === 'all_category' || $leaderLevel === 'national' || $leaderLevel === 'category') {
             $filteredData['categories'] = $categoryData;
         }
-        // dd($filteredData);
+    
+        // Add debug logging to check data visibility
+        // \Log::debug('Filtered Data: ', $filteredData);
+        // \Log::debug('Scopes: ', $scopes);
+    
+        // Return view with filtered data and scopes
         return view('issues.insights', compact('filteredData', 'scopes'));
     }
+    
 
 
     private function countIssuesByCategory($issues)

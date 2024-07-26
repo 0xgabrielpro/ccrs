@@ -28,7 +28,7 @@
                                             </div>
                                         </div>
                                         <div class="mt-2 flex items-center text-sm text-gray-500 sm:mt-0">
-                                            <p>Created at: {{ $issue->created_at->format('M d, Y') }}</p>
+                                            <p>{{ $issue->created_at->diffForHumans() }}</p>
                                         </div>
                                     </div>
                                 </li>
